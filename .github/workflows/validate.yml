@@ -1,0 +1,25 @@
+name: Validate NixOS Config
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Nix
+        run: |
+          curl -L https://nixos.org/nix/install | sh
+          echo "NIX_PATH=$HOME/.nix-profile" >> $GITHUB_ENV
+          echo "$HOME/.nix-profile/bin" >> $GITHUB_PATH
+
+      - name: Enable Experimental Features
+        run: |
+          mkdir -p ~/.config/nix
+          echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
+
+      - name: Validate NixOS Configuration
+        run: nix flake check
