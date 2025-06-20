@@ -12,7 +12,7 @@ spec:
       labels:
         app: wireguard
     spec:
-      hostNetwork: true
+      hostNetwork: false
       containers:
       - name: wireguard
         image: linuxserver/wireguard:1.0.20210914
@@ -21,7 +21,7 @@ spec:
             add:
               - NET_ADMIN
               - SYS_MODULE
-          privileged: true
+          privileged: false
         env:
           - name: PUID
             value: "1000"
