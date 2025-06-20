@@ -2,4 +2,3 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
-namespace: infra
