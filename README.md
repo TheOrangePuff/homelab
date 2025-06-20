@@ -6,7 +6,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 ### Core
 
-- [ ] FluxCD
+- [x] FluxCD
 - [ ] Traefik
 
 ### Networking
