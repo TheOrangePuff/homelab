@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: syncthing
+  template:
+    metadata:
+      labels:
+        app: syncthing
+    spec:
+      containers:
+      - name: syncthing
+        image: linuxserver/syncthing:1.30.0
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Australia/Adelaide"
+        ports:
+        - name: sync
+          containerPort: 22000
+          protocol: TCP
+        - name: discovery
+          containerPort: 21027
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: mnt
+          mountPath: /mnt
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: syncthing
+      - name: mnt
+        nfs:
+          server: 192.168.0.210
+          path: /mnt/storage/sync
