@@ -30,8 +30,9 @@ spec:
           - name: TZ
             value: "Australia/Adelaide"
         volumeMounts:
-          - mountPath: /config
-            name: config
-      volumes:
         - name: config
-          emptyDir: {}
+          mountPath: /config
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: wireguard
