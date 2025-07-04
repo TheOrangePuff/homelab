@@ -4,6 +4,7 @@ metadata:
   name: traefik
   namespace: flux-system
 spec:
+  suspend: true
   interval: 1m
   path: ./apps/traefik
   prune: true
