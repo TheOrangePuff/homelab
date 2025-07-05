@@ -23,6 +23,9 @@ spec:
         - name: TZ
           value: "Australia/Adelaide"
         ports:
+        - name: web-ui
+          containerPort: 8384
+          protocol: TCP
         - name: sync
           containerPort: 22000
           protocol: TCP

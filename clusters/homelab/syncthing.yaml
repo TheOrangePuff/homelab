@@ -13,3 +13,4 @@ spec:
   targetNamespace: default
   dependsOn:
     - name: metallb
+    - name: traefik
