@@ -11,7 +11,7 @@ spec:
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       services:
-        - name: docker-traefik-endpoint
+        - name: legacy-docker-traefik-endpoint
           port: 8080
           passHostHeader: true
 ---
@@ -28,7 +28,7 @@ spec:
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       services:
-        - name: docker-traefik-endpoint
+        - name: legacy-docker-traefik-endpoint
           port: 8443
           passHostHeader: true
           serversTransport: insecure-transport

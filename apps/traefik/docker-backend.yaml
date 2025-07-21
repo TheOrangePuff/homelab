@@ -1,23 +1,7 @@
 apiVersion: v1
-kind: Service
-metadata:
-  name: docker-traefik
-  namespace: infra
-spec:
-  type: ExternalName
-  externalName: 192.168.0.210
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
-  - name: https
-    port: 443
-    targetPort: 443
----
-apiVersion: v1
 kind: Endpoints
 metadata:
-  name: docker-traefik
+  name: legacy-docker-traefik-endpoint
   namespace: infra
 subsets:
 - addresses:
@@ -31,7 +15,7 @@ subsets:
 apiVersion: v1
 kind: Service
 metadata:
-  name: docker-traefik-endpoint
+  name: legacy-docker-traefik-endpoint
   namespace: infra
 spec:
   ports:
