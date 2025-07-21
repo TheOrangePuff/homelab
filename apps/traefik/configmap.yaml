@@ -12,6 +12,13 @@ data:
         address: ":80"
       websecure:
         address: ":443"
+    certificatesResolvers:
+      letsencrypt:
+        acme:
+          email: danielvdp56@gmail.com 
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web
     providers:
       kubernetesCRD: {}
       kubernetesIngress: {}

@@ -31,7 +31,11 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/traefik
+        - name: data
+          mountPath: /data
       volumes:
       - name: config
         configMap:
           name: traefik-config
+      - name: data
+        emptyDir: {}
