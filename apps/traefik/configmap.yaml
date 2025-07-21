@@ -14,3 +14,4 @@ data:
         address: ":443"
     providers:
       kubernetesCRD: {}
+      kubernetesIngress: {}
