@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: HostRegexp(`{host:.+}`)
+    - match: HostRegexp(`^.+\.theorangeserver\.net$`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       middlewares:
@@ -26,7 +26,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostRegexp(`{host:.+}`)
+    - match: HostRegexp(`^.+\.theorangeserver\.net$`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       middlewares:
