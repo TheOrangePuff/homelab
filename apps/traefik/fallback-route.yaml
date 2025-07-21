@@ -5,7 +5,7 @@ metadata:
   namespace: infra
 spec:
   entryPoints:
-    - http
+    - web
   routes:
     - match: HostRegexp(`{catchall:.+}`)
       kind: Rule
@@ -22,7 +22,7 @@ metadata:
   namespace: infra
 spec:
   entryPoints:
-    - https
+    - websecure
   routes:
     - match: HostRegexp(`{catchall:.+}`)
       kind: Rule
