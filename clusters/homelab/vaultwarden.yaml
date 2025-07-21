@@ -4,6 +4,7 @@ metadata:
   name: vaultwarden
   namespace: flux-system
 spec:
+  suspend: true
   interval: 1m
   path: ./apps/vaultwarden
   prune: true

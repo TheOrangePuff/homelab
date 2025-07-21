@@ -1,0 +1,42 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: docker-traefik-fallback
+  namespace: infra
+spec:
+  entryPoints:
+    - http
+  routes:
+    - match: HostRegexp(`{catchall:.+}`)
+      kind: Rule
+      priority: 1  # Lowest priority - only matches if nothing else does
+      services:
+        - name: docker-traefik-endpoint
+          port: 8080
+          passHostHeader: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: docker-traefik-fallback-https
+  namespace: infra
+spec:
+  entryPoints:
+    - https
+  routes:
+    - match: HostRegexp(`{catchall:.+}`)
+      kind: Rule
+      priority: 1  # Lowest priority - only matches if nothing else does
+      services:
+        - name: docker-traefik-endpoint
+          port: 8443
+          passHostHeader: true
+          serversTransport: insecure-transport
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure-transport
+  namespace: infra
+spec:
+  insecureSkipVerify: true

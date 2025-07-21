@@ -6,3 +6,5 @@ resources:
   - configmap.yaml
   - service.yaml
   - dashboard-ingressroute.yaml
+  - docker-backend.yaml
+  - fallback-route.yaml
