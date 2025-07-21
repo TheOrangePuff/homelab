@@ -10,6 +10,8 @@ spec:
     - match: HostRegexp(`{host:.+}`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
+      middlewares:
+        - name: forward-headers
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8080
@@ -27,6 +29,8 @@ spec:
     - match: HostRegexp(`{host:.+}`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
+      middlewares:
+        - name: forward-headers
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8443
