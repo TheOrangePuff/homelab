@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: HostRegexp(`{catchall:.+}`)
+    - match: HostRegexp(`{host:.+}`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       services:
@@ -24,7 +24,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostRegexp(`{catchall:.+}`)
+    - match: HostRegexp(`{host:.+}`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       services:
