@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: preserve-host
+  namespace: infra
+spec:
+  headers:
+    customRequestHeaders:
+      Host: "{host}"

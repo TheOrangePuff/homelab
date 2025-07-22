@@ -11,7 +11,7 @@ spec:
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       middlewares:
-        - name: forward-headers
+        - name: preserve-host
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8080
@@ -30,7 +30,7 @@ spec:
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
       middlewares:
-        - name: forward-headers
+        - name: preserve-host
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8443

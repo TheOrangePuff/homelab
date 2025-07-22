@@ -8,5 +8,5 @@ resources:
   - service.yaml
   - dashboard-ingressroute.yaml
   - docker-backend.yaml
-  - forward-headers-middleware.yaml
+  - preserve-host-middleware.yaml
   - fallback-route.yaml
