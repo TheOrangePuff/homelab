@@ -10,8 +10,6 @@ spec:
     - match: HostRegexp(`^.+\.theorangeserver\.net$`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
-      middlewares:
-        - name: preserve-host
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8080
@@ -29,8 +27,6 @@ spec:
     - match: HostRegexp(`^.+\.theorangeserver\.net$`)
       kind: Rule
       priority: 1  # Lowest priority - only matches if nothing else does
-      middlewares:
-        - name: preserve-host
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8443
