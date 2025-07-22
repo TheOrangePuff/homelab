@@ -9,4 +9,3 @@ resources:
   - dashboard-ingressroute.yaml
   - docker-backend.yaml
   - fallback-route.yaml
-  - forward-headers-middleware.yaml
