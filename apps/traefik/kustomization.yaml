@@ -9,3 +9,5 @@ resources:
   - dashboard-ingressroute.yaml
   - docker-backend.yaml
   - fallback-route.yaml
+  - https-redirect-middleware.yaml
+  - https-redirect-route.yaml
