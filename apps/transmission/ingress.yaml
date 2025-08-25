@@ -1,0 +1,17 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: transmission
+  namespace: infra
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`transmission.theorangeserver.net`)
+      kind: Rule
+      services:
+        - name: transmission
+          port: 9091
+  tls:
+    certResolver: letsencrypt

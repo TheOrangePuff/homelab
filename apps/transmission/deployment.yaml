@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+  namespace: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission
+  template:
+    metadata:
+      labels:
+        app: transmission
+    spec:
+      containers:
+      - name: transmission
+        image: linuxserver/transmission:latest
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "Australia/Adelaide"
+        ports:
+        - name: web
+          containerPort: 9091
+          protocol: TCP
+        - name: torrent
+          containerPort: 51413
+          protocol: TCP
+        - name: torrent-udp
+          containerPort: 51413
+          protocol: UDP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: downloads
+          mountPath: /downloads
+        - name: watch
+          mountPath: /watch
+      volumes:
+      - name: config
+        emptyDir: {}
+      - name: downloads
+        nfs:
+          server: 192.168.0.210
+          path: /mnt/storage/downloads
+      - name: watch
+        nfs:
+          server: 192.168.0.210
+          path: /mnt/storage/watch
