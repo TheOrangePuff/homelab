@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transmission
-  namespace: infra
+  namespace: app
 spec:
   replicas: 1
   selector:

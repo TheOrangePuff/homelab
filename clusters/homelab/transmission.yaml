@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  targetNamespace: infra
+  targetNamespace: app
   dependsOn:
-    - name: infra-namespace
+    - name: app-namespace
   suspend: true
