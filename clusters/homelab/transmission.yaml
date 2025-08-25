@@ -13,3 +13,4 @@ spec:
   targetNamespace: infra
   dependsOn:
     - name: infra-namespace
+  suspend: true
