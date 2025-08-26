@@ -17,7 +17,7 @@ spec:
         fsGroup: 65534
       containers:
       - name: sealed-secrets-controller
-        image: quay.io/bitnami/sealed-secrets-controller:v0.31
+        image: docker.io/bitnami/sealed-secrets-controller:0.31.0
         command:
         - controller
         livenessProbe:
