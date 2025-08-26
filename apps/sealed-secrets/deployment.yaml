@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sealed-secrets-controller
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: sealed-secrets-controller
+  template:
+    metadata:
+      labels:
+        name: sealed-secrets-controller
+    spec:
+      serviceAccountName: sealed-secrets-controller
+      securityContext:
+        fsGroup: 65534
+      containers:
+      - name: sealed-secrets-controller
+        image: quay.io/bitnami/sealed-secrets-controller:v0.31
+        command:
+        - controller
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+        stdin: false
+        tty: false
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+      volumes:
+      - emptyDir: {}
+        name: tmp
