@@ -16,12 +16,6 @@ spec:
       containers:
       - name: traefik
         image: traefik:v3.0
-        args:
-        - "--api.insecure=true"
-        - "--providers.kubernetescrd"
-        - "--entrypoints.web.address=:80"
-        - "--entrypoints.websecure.address=:443"
-        - "--log.level=DEBUG"
         env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:

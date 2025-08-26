@@ -5,6 +5,8 @@ metadata:
   namespace: infra
 data:
   traefik.yml: |
+    log:
+      level: DEBUG
     api:
       insecure: true
     entryPoints:
