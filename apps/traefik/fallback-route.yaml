@@ -24,8 +24,8 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostSNIRegexp(`^.+\.theorangeserver\.net$`)
-      priority: 1  # Lowest priority for fallback
+    - match: HostSNI(`bitwarden.theorangeserver.net`) || HostSNI(`radarr.theorangeserver.net`) || HostSNI(`sonarr.theorangeserver.net`) || HostSNI(`transmission.theorangeserver.net`) || HostSNI(`jackett.theorangeserver.net`)
+      priority: 1
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8443
