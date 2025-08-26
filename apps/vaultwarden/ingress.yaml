@@ -3,14 +3,13 @@ kind: Ingress
 metadata:
   name: vaultwarden
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   tls:
   - hosts:
     - bitwarden.theorangeserver.net
     - vaultwarden.theorangeserver.net
-    secretName: vaultwarden-tls
   rules:
   - host: bitwarden.theorangeserver.net
     http:

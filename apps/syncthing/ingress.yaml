@@ -3,13 +3,12 @@ kind: Ingress
 metadata:
   name: syncthing
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   tls:
   - hosts:
     - sync.theorangeserver.net
-    secretName: syncthing-tls
   rules:
   - host: sync.theorangeserver.net
     http:
