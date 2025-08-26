@@ -25,6 +25,7 @@ spec:
     - websecure
   routes:
     - match: HostSNIRegexp(`^.+\.theorangeserver\.net$`)
+      priority: 1  # Lowest priority for fallback
       services:
         - name: legacy-docker-traefik-endpoint
           port: 8443
