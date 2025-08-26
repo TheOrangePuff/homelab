@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: infra
 resources:
   - rbac.yaml
+  - pvc.yaml
+  - aws-credentials-sealed-secret.yaml
   - deployment.yaml
   - configmap.yaml
   - service.yaml

@@ -15,10 +15,11 @@ data:
     certificatesResolvers:
       letsencrypt:
         acme:
-          email: danielvdp56@gmail.com 
+          email: me@danielvdp.com 
           storage: /data/acme.json
-          httpChallenge:
-            entryPoint: web
+          dnsChallenge:
+            provider: route53
+            delayBeforeCheck: 30s
     providers:
       kubernetesCRD: {}
       kubernetesIngress: {}
