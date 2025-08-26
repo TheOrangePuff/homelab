@@ -14,7 +14,3 @@ spec:
           kind: TraefikService
   tls:
     certResolver: letsencrypt
-    domains:
-      - main: "*.theorangeserver.net"
-      - sans:
-        - "theorangeserver.net"
