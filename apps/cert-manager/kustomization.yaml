@@ -3,3 +3,6 @@ kind: Kustomization
 resources:
   - cert-manager.yaml
   - ingress-nginx.yaml
+  - aws-credentials-sealed-secret.yaml
+  - cluster-issuer.yaml
+  - wildcard-certificate.yaml
