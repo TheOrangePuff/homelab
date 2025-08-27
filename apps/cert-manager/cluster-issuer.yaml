@@ -16,8 +16,6 @@ spec:
           accessKeyIDSecretRef:
             name: aws-credentials
             key: AWS_ACCESS_KEY_ID
-            namespace: cert-manager
           secretAccessKeySecretRef:
             name: aws-credentials
             key: AWS_SECRET_ACCESS_KEY
-            namespace: cert-manager
