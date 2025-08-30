@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unifi-mongodb
+  template:
+    metadata:
+      labels:
+        app: unifi-mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:7.0
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: MONGO_INITDB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: MONGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: MONGO_INITDB_DATABASE
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-data
+        persistentVolumeClaim:
+          claimName: unifi-mongodb-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-mongodb
+spec:
+  selector:
+    app: unifi-mongodb
+  ports:
+  - port: 27017
+    targetPort: 27017
+    protocol: TCP
