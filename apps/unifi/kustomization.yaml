@@ -4,7 +4,6 @@ namespace: infra
 resources:
   - mongodb-sealed-secret.yaml
   - unifi-sealed-secret.yaml
-  - mongodb-init-configmap.yaml
   - mongodb-pvc.yaml
   - mongodb-deployment.yaml
   - pvc.yaml
