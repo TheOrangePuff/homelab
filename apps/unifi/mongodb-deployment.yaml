@@ -31,16 +31,34 @@ spec:
             secretKeyRef:
               name: mongodb-credentials
               key: MONGO_INITDB_DATABASE
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: unifi-credentials
+              key: MONGO_USER
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              name: unifi-credentials
+              key: MONGO_PASS
+        - name: MONGO_DBNAME
+          value: "unifi"
         ports:
         - containerPort: 27017
           name: mongodb
         volumeMounts:
         - name: mongodb-data
           mountPath: /data/db
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: mongodb-data
         persistentVolumeClaim:
           claimName: unifi-mongodb-data
+      - name: init-script
+        configMap:
+          name: mongodb-init-script
+          defaultMode: 0755
 ---
 apiVersion: v1
 kind: Service
