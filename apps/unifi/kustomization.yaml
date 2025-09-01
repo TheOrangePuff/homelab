@@ -9,4 +9,5 @@ resources:
   - pvc.yaml
   - deployment.yaml
   - service.yaml
+  - serverstransport.yaml
   - ingressroute.yaml
