@@ -14,4 +14,4 @@ spec:
           scheme: https
           serversTransport: unifi-transport
   tls:
-    certResolver: letsencrypt
+    secretName: wildcard-certificate
