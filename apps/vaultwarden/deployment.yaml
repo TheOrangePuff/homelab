@@ -19,7 +19,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: vaultwarden
-        image: vaultwarden/server:1.34.1
+        image: vaultwarden/server:1.34.3
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
