@@ -56,6 +56,13 @@ spec:
           value: "1000"
         - name: TZ
           value: "Australia/Adelaide"
+        - name: ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-admin
+              key: token
+        - name: SIGNUPS_ALLOWED
+          value: "false"
         volumeMounts:
         - name: vaultwarden-data
           mountPath: /data
