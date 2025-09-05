@@ -9,5 +9,5 @@ spec:
   ports:
   - name: web-ui
     port: 80
-    targetPort: 4235
+    targetPort: 80
     protocol: TCP

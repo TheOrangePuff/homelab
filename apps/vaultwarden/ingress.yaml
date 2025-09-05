@@ -21,7 +21,7 @@ spec:
           service:
             name: vaultwarden
             port:
-              number: 4235
+              number: 80
   - host: vaultwarden.theorangeserver.net
     http:
       paths:
@@ -31,4 +31,4 @@ spec:
           service:
             name: vaultwarden
             port:
-              number: 4235
+              number: 80
