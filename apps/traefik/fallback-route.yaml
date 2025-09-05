@@ -24,7 +24,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: HostSNI(`bitwarden.theorangeserver.net`) || HostSNI(`radarr.theorangeserver.net`) || HostSNI(`sonarr.theorangeserver.net`) || HostSNI(`transmission.theorangeserver.net`) || HostSNI(`jackett.theorangeserver.net`) || HostSNI(`home.theorangeserver.net`)
+    - match: HostSNI(`radarr.theorangeserver.net`) || HostSNI(`sonarr.theorangeserver.net`) || HostSNI(`transmission.theorangeserver.net`) || HostSNI(`jackett.theorangeserver.net`) || HostSNI(`home.theorangeserver.net`)
       priority: 1
       services:
         - name: legacy-docker-traefik-endpoint
