@@ -1,0 +1,116 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vaultwarden-backup
+spec:
+  schedule: "0 * * * *"  # Every hour
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+          containers:
+          - name: backup
+            image: restic/restic:0.18.0
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Starting Vaultwarden backup at $(date)"
+              
+              # Initialize repository if it doesn't exist
+              restic snapshots &>/dev/null || {
+                echo "Initializing restic repository..."
+                restic init
+              }
+              
+              # Create backup of entire data directory
+              restic backup /data \
+                --tag vaultwarden \
+                --tag automated \
+                --host vaultwarden-k8s \
+                --verbose
+              
+              # Show backup statistics
+              echo "Backup completed. Current snapshots:"
+              restic snapshots
+              
+              # Prune old backups based on retention policy
+              echo "Pruning old backups..."
+              restic forget \
+                --keep-hourly 24 \
+                --keep-daily 7 \
+                --keep-weekly 4 \
+                --keep-monthly 3 \
+                --prune \
+                --tag automated
+              
+              # Check repository integrity (quick check)
+              echo "Checking repository integrity..."
+              restic check --read-data-subset=1%
+              
+              echo "Backup job completed successfully at $(date)"
+            env:
+            # Repository location - easily changeable
+            - name: RESTIC_REPOSITORY
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-backup-config
+                  key: repository
+            # Repository password
+            - name: RESTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-backup-config
+                  key: password
+            # AWS/S3 credentials
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-backup-config
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-backup-config
+                  key: aws-secret-access-key
+            # Backblaze B2 region
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: vaultwarden-backup-config
+                  key: aws-region
+            - name: AWS_S3_FORCE_PATH_STYLE
+              value: "false"
+            volumeMounts:
+            - name: vaultwarden-data
+              mountPath: /data
+              readOnly: true
+            - name: cache
+              mountPath: /cache
+            resources:
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+          restartPolicy: OnFailure
+          volumes:
+          - name: vaultwarden-data
+            persistentVolumeClaim:
+              claimName: vaultwarden-data
+          - name: cache
+            emptyDir: {}

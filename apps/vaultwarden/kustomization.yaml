@@ -6,3 +6,5 @@ resources:
   - ingress.yaml
   - pvc.yaml
   - service.yaml
+  - backup-sealed-secret.yaml
+  - backup-restic-cronjob.yaml
