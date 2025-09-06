@@ -7,21 +7,21 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 ### Core
 
 - [x] FluxCD
-- [ ] Traefik
+- [x] Traefik
 
 ### Networking
 
 - [ ] AdGuard Home
-- [ ] MetalLB
-- [ ] Unifi Dashboard
-- [ ] Wireguard
+- [x] MetalLB
+- [x] Unifi Dashboard
+- [] Wireguard (WIP)
 
 ### Security
 
 - [ ] Authentik
 - [ ] CrowdSec
 - [ ] SOPS
-- [ ] Vaultwarden
+- [x] Vaultwarden
 
 ### Observability
 
@@ -34,7 +34,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 ### Storage
 
-- [ ] SyncThing
+- [x] SyncThing
 - [ ] NextCloud
 
 ### Backups
@@ -50,7 +50,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 - [ ] Sonarr
 - [ ] Bazarr
 - [ ] Prowlarr
-- [ ] Transmission
+- [x] Transmission
 
 #### Books
 
@@ -73,6 +73,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 ### Games
 
 - [ ] Minecraft
+
 
 ## Infrastructure Diagram
 
