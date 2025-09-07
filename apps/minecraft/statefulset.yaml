@@ -156,6 +156,8 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
+      annotations:
+        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -163,6 +165,8 @@ spec:
           storage: 10Gi
   - metadata:
       name: world
+      annotations:
+        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -170,6 +174,8 @@ spec:
           storage: 50Gi
   - metadata:
       name: world-nether
+      annotations:
+        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -177,6 +183,8 @@ spec:
           storage: 20Gi
   - metadata:
       name: world-end
+      annotations:
+        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
