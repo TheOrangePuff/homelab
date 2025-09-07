@@ -41,7 +41,7 @@ spec:
         - name: TYPE
           value: "VELOCITY"
         - name: VELOCITY_VERSION
-          value: "latest"
+          value: "3.1.1"
         - name: MEMORY
           value: "512M"
         - name: ENABLE_RCON
