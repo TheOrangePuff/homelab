@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: vaultwarden-backup
+  namespace: app
 spec:
   schedule: "0 * * * *"  # Every hour
   successfulJobsHistoryLimit: 3
