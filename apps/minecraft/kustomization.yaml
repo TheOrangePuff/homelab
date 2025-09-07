@@ -10,3 +10,5 @@ resources:
   - backuper-configmap.yaml
   - backup-sealed-secret.yaml
   - backup-restic-cronjob.yaml
+  - rcon-sealed-secret.yaml
+  - velocity-sealed-secret.yaml

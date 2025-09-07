@@ -49,8 +49,8 @@ spec:
         - name: RCON_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: minecraft-velocity-rcon
-              key: password
+              name: minecraft-rcon-secret
+              key: rcon-password
         ports:
         - name: minecraft
           containerPort: 25577
