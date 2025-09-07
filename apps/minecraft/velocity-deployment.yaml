@@ -57,6 +57,7 @@ spec:
           capabilities:
             drop:
             - ALL
+        workingDir: /server
         env:
         - name: TYPE
           value: "VELOCITY"
@@ -106,10 +107,14 @@ spec:
         - name: velocity-forwarding
           mountPath: /config/forwarding.secret
           subPath: forwarding.secret
+        - name: server
+          mountPath: /server
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: minecraft-velocity-config
+      - name: server
+        emptyDir: {}
       - name: velocity-config
         configMap:
           name: minecraft-velocity-config
