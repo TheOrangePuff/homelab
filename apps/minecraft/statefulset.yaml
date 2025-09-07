@@ -120,6 +120,10 @@ spec:
           value: "survival"
         - name: DIFFICULTY
           value: "normal"
+        - name: PAPER_VELOCITY_ENABLED
+          value: "true"
+        - name: PAPER_VELOCITY_ONLINE_MODE
+          value: "true"
         ports:
         - name: minecraft
           containerPort: 25565
