@@ -147,12 +147,6 @@ spec:
         - name: backuper-config
           mountPath: /data/plugins/Backuper/config.yml
           subPath: config.yml
-        - name: shared-config
-          mountPath: /data/whitelist.json
-          subPath: whitelist.json
-        - name: shared-config
-          mountPath: /data/ops.json
-          subPath: ops.json
       volumes:
       - name: backups
         persistentVolumeClaim:
@@ -160,9 +154,6 @@ spec:
       - name: backuper-config
         configMap:
           name: minecraft-backuper-config
-      - name: shared-config
-        persistentVolumeClaim:
-          claimName: minecraft-shared-config
   volumeClaimTemplates:
   - metadata:
       name: data
