@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minecraft-backuper-config
+data:
+  config.yml: |
+    # Backuper Plugin Configuration
+    # https://github.com/DVDishka/Backuper
+    
+    # Backup settings
+    backup:
+      # Enable automatic backups
+      enabled: true
+      
+      # Backup interval in minutes (60 = hourly)
+      interval: 60
+      
+      # Maximum number of backups to keep
+      max-backups: 48  # Keep 2 days of hourly backups locally
+      
+      # Backup on server stop
+      on-stop: true
+      
+      # Backup on server start
+      on-start: false
+      
+      # Compress backups
+      compression: true
+      
+      # Backup format (ZIP or TAR)
+      format: ZIP
+      
+      # Backup naming pattern
+      name-pattern: "backup_{world}_{date}_{time}"
+      
+      # Date format
+      date-format: "yyyy-MM-dd"
+      
+      # Time format  
+      time-format: "HH-mm-ss"
+    
+    # What to backup
+    include:
+      # Backup world folders
+      worlds: true
+      
+      # Backup plugins folder
+      plugins: true 
+      
+      # Backup config files
+      configs: true
+      
+      # Backup logs
+      logs: false
+      
+      # Additional folders to backup (relative to server directory)
+      additional-folders: []
+    
+    # Exclusions
+    exclude:
+      # Files/folders to exclude from backups
+      patterns:
+        - "*.log"
+        - "*.tmp"
+        - "cache/*"
+        - "logs/*"
+        - "crash-reports/*"
+    
+    # Notifications
+    notifications:
+      # Broadcast backup start/completion to players
+      broadcast: true
+      
+      # Console messages
+      console: true
+      
+      # Message prefix
+      prefix: "&6[Backup] &r"
+      
+      # Messages
+      messages:
+        start: "&aStarting backup..."
+        success: "&aBackup completed successfully!"
+        failure: "&cBackup failed! Check console for details."
+    
+    # Performance
+    performance:
+      # Use async operations
+      async: true
+      
+      # Pause server during backup (reduces lag but stops gameplay)
+      pause-server: false
+      
+      # Thread priority (1-10, higher = more priority)
+      thread-priority: 3
+    
+    # Advanced
+    advanced:
+      # Enable debug logging
+      debug: false
+      
+      # Backup location (relative to plugin folder)
+      backup-location: "backups"
+      
+      # Enable metrics
+      metrics: true
+      
+      # Check for updates
+      update-check: true

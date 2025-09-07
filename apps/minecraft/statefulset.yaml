@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minecraft-backend
+spec:
+  serviceName: minecraft-backend
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-backend
+  template:
+    metadata:
+      labels:
+        app: minecraft-backend
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - minecraft-backend
+              topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 300
+      containers:
+      - name: minecraft
+        image: itzg/minecraft-server:2024.12.1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: TYPE
+          value: "PAPER"
+        - name: VERSION
+          value: "1.21.4"
+        - name: MEMORY
+          value: "4G"
+        - name: USE_AIKAR_FLAGS
+          value: "true"
+        - name: ENABLE_RCON
+          value: "true"
+        - name: RCON_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-rcon-secret
+              key: rcon-password
+        - name: RCON_PORT
+          value: "25575"
+        - name: SERVER_PORT
+          value: "25565"
+        - name: ONLINE_MODE
+          value: "false"
+        - name: WHITELIST
+          value: "true"
+        - name: ENFORCE_WHITELIST
+          value: "true"
+        - name: ENABLE_AUTOSTOP
+          value: "TRUE"
+        - name: AUTOSTOP_TIMEOUT_EST
+          value: "3600"
+        - name: AUTOSTOP_TIMEOUT_INIT
+          value: "1800"
+        - name: AUTOSTOP_PERIOD
+          value: "10"
+        - name: VELOCITY_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-velocity
+              key: forwarding-secret
+        - name: PLUGINS
+          value: "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/5.2.1/PAPER/download,https://hangar.papermc.io/api/v1/projects/ViaBackwards/versions/5.2.0/PAPER/download,https://hangar.papermc.io/api/v1/projects/Chunky/versions/1.4.28/PAPER/download"
+        - name: SPIGET_RESOURCES
+          value: "34315,105424"
+        - name: SPAWN_PROTECTION
+          value: "0"
+        - name: VIEW_DISTANCE
+          value: "10"
+        - name: MODE
+          value: "survival"
+        - name: DIFFICULTY
+          value: "normal"
+        ports:
+        - name: minecraft
+          containerPort: 25565
+          protocol: TCP
+        - name: rcon
+          containerPort: 25575
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - mc-health
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - mc-health
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 10
+        resources:
+          limits:
+            memory: "6Gi"
+            cpu: "4000m"
+          requests:
+            memory: "4Gi"
+            cpu: "1000m"
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                echo "Pod terminating - saving world data gracefully"
+                # Save the world before shutdown
+                rcon-cli save-all
+                sleep 2
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /data/world
+        - name: world-nether
+          mountPath: /data/world_nether
+        - name: world-end
+          mountPath: /data/world_the_end
+        - name: backups
+          mountPath: /data/plugins/Backuper/backups
+        - name: backuper-config
+          mountPath: /data/plugins/Backuper/config.yml
+          subPath: config.yml
+        - name: shared-config
+          mountPath: /data/whitelist.json
+          subPath: whitelist.json
+        - name: shared-config
+          mountPath: /data/ops.json
+          subPath: ops.json
+      volumes:
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups
+      - name: backuper-config
+        configMap:
+          name: minecraft-backuper-config
+      - name: shared-config
+        persistentVolumeClaim:
+          claimName: minecraft-shared-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi
+  - metadata:
+      name: world
+    spec:
+      accessModes: ["ReadWriteMany"]
+      resources:
+        requests:
+          storage: 50Gi
+  - metadata:
+      name: world-nether
+    spec:
+      accessModes: ["ReadWriteMany"]
+      resources:
+        requests:
+          storage: 20Gi
+  - metadata:
+      name: world-end
+    spec:
+      accessModes: ["ReadWriteMany"]
+      resources:
+        requests:
+          storage: 20Gi

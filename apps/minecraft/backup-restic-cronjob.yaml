@@ -1,0 +1,132 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minecraft-backup
+spec:
+  schedule: "0 * * * *"  # Every hour
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+          containers:
+          - name: backup
+            image: restic/restic:0.18.0
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Starting Minecraft backup sync to Backblaze B2 at $(date)"
+              
+              # Initialize repository if it doesn't exist
+              restic snapshots &>/dev/null || {
+                echo "Initializing restic repository..."
+                restic init
+              }
+              
+              # Count local backups
+              LOCAL_BACKUPS=$(ls -1 /backups/*.zip 2>/dev/null | wc -l)
+              echo "Found $LOCAL_BACKUPS local backup files"
+              
+              if [ "$LOCAL_BACKUPS" -eq 0 ]; then
+                echo "No local backups found, skipping sync"
+                exit 0
+              fi
+              
+              # Backup the Backuper plugin's backup directory
+              echo "Syncing Minecraft backups to Backblaze B2..."
+              restic backup /backups \
+                --tag minecraft \
+                --tag backuper \
+                --tag automated \
+                --tag "sync-$(date +%Y%m%d)" \
+                --host minecraft-k8s \
+                --exclude "*.tmp" \
+                --exclude "*.lock" \
+                --verbose
+              
+              # Show backup statistics
+              echo "Backup sync completed. Current snapshots:"
+              restic snapshots --tag minecraft
+              
+              # Prune old backups based on retention policy
+              # Keep more backups in B2 since we have more space there
+              echo "Pruning old backups in Backblaze..."
+              restic forget \
+                --keep-hourly 48 \
+                --keep-daily 30 \
+                --keep-weekly 12 \
+                --keep-monthly 12 \
+                --keep-yearly 2 \
+                --prune \
+                --tag automated
+              
+              # Check repository integrity (quick check)
+              echo "Checking repository integrity..."
+              restic check --read-data-subset=1%
+              
+              # Clean up very old local backups (older than 3 days)
+              echo "Cleaning up local backups older than 3 days..."
+              find /backups -name "*.zip" -type f -mtime +3 -delete
+              
+              echo "Backup sync job completed successfully at $(date)"
+            env:
+            - name: RESTIC_REPOSITORY
+              valueFrom:
+                secretKeyRef:
+                  name: minecraft-backup-config
+                  key: repository
+            - name: RESTIC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minecraft-backup-config
+                  key: password
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: minecraft-backup-config
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minecraft-backup-config
+                  key: aws-secret-access-key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: minecraft-backup-config
+                  key: aws-region
+            - name: AWS_S3_FORCE_PATH_STYLE
+              value: "false"
+            volumeMounts:
+            - name: backups
+              mountPath: /backups
+              readOnly: true
+            - name: cache
+              mountPath: /cache
+            resources:
+              limits:
+                memory: "1Gi"
+                cpu: "1000m"
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+          restartPolicy: OnFailure
+          volumes:
+          - name: backups
+            persistentVolumeClaim:
+              claimName: minecraft-backups
+          - name: cache
+            emptyDir: {}

@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-velocity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-velocity
+  template:
+    metadata:
+      labels:
+        app: minecraft-velocity
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - minecraft-velocity
+              topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: velocity
+        image: itzg/bungeecord:latest
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: TYPE
+          value: "VELOCITY"
+        - name: VELOCITY_VERSION
+          value: "3.4.0"
+        - name: MEMORY
+          value: "512M"
+        - name: ENABLE_RCON
+          value: "true"
+        - name: RCON_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-velocity-rcon
+              key: password
+        ports:
+        - name: minecraft
+          containerPort: 25577
+          protocol: TCP
+        - name: rcon
+          containerPort: 25575
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 25577
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 25577
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 5
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: velocity-config
+          mountPath: /config/velocity.toml
+          subPath: velocity.toml
+        - name: velocity-forwarding
+          mountPath: /config/forwarding.secret
+          subPath: forwarding.secret
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: minecraft-velocity-config
+      - name: velocity-config
+        configMap:
+          name: minecraft-velocity-config
+      - name: velocity-forwarding
+        secret:
+          secretName: minecraft-velocity
+          items:
+          - key: forwarding-secret
+            path: forwarding.secret
