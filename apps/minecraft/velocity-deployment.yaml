@@ -33,7 +33,16 @@ spec:
       initContainers:
       - name: fix-ownership
         image: busybox:1.35
-        command: ['chown', '-R', '1000:1000', '/config']
+        command: 
+        - sh
+        - -c
+        - |
+          mkdir -p /config
+          chown -R 1000:1000 /config
+          chmod -R 755 /config
+          # Fix the root filesystem directory where the container runs
+          chown 1000:1000 / 2>/dev/null || true
+          chmod 755 / 2>/dev/null || true
         volumeMounts:
         - name: config
           mountPath: /config
@@ -51,8 +60,6 @@ spec:
         env:
         - name: TYPE
           value: "VELOCITY"
-        - name: VELOCITY_VERSION
-          value: "3.1.1"
         - name: MEMORY
           value: "512M"
         - name: ENABLE_RCON
