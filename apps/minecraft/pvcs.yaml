@@ -15,7 +15,7 @@ metadata:
   name: minecraft-backups
 spec:
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 100Gi
@@ -26,7 +26,7 @@ metadata:
   name: minecraft-shared-config
 spec:
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
