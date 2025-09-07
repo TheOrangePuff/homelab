@@ -74,7 +74,7 @@ spec:
         - name: VERSION
           value: "1.21.8"
         - name: MEMORY
-          value: "4G"
+          value: "8G"
         - name: USE_AIKAR_FLAGS
           value: "true"
         - name: ENABLE_RCON
@@ -90,6 +90,11 @@ spec:
           value: "25565"
         - name: ONLINE_MODE
           value: "false"
+        - name: PAPER_VELOCITY_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-velocity
+              key: forwarding-secret
         - name: WHITELIST
           value: "true"
         - name: ENFORCE_WHITELIST
@@ -140,7 +145,7 @@ spec:
           failureThreshold: 10
         resources:
           limits:
-            memory: "6Gi"
+            memory: "8Gi"
             cpu: "4000m"
           requests:
             memory: "4Gi"
