@@ -21,7 +21,7 @@ data:
     
     # Server list
     [servers]
-    main = "minecraft-backend-0:25565"
+    main = "minecraft-backend.app.svc.cluster.local:25565"
     
     # Default server
     try = ["main"]
