@@ -8,7 +8,7 @@ spec:
     app: minecraft-velocity
   ports:
   - name: minecraft
-    port: 25577
+    port: 25565
     targetPort: 25577
     protocol: TCP
 ---
