@@ -81,8 +81,6 @@ spec:
             secretKeyRef:
               name: minecraft-velocity
               key: forwarding-secret
-        - name: PLUGINS
-          value: "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/5.2.1/PAPER/download,https://hangar.papermc.io/api/v1/projects/ViaBackwards/versions/5.2.0/PAPER/download,https://hangar.papermc.io/api/v1/projects/Chunky/versions/1.4.28/PAPER/download"
         - name: SPAWN_PROTECTION
           value: "0"
         - name: VIEW_DISTANCE
@@ -156,8 +154,6 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
-      annotations:
-        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -165,8 +161,6 @@ spec:
           storage: 10Gi
   - metadata:
       name: world
-      annotations:
-        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -174,8 +168,6 @@ spec:
           storage: 50Gi
   - metadata:
       name: world-nether
-      annotations:
-        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
@@ -183,8 +175,6 @@ spec:
           storage: 20Gi
   - metadata:
       name: world-end
-      annotations:
-        volume.kubernetes.io/mount-options: "uid=1000,gid=1000"
     spec:
       accessModes: ["ReadWriteOnce"]
       resources:
