@@ -82,8 +82,6 @@ spec:
               key: forwarding-secret
         - name: PLUGINS
           value: "https://hangar.papermc.io/api/v1/projects/ViaVersion/versions/5.2.1/PAPER/download,https://hangar.papermc.io/api/v1/projects/ViaBackwards/versions/5.2.0/PAPER/download,https://hangar.papermc.io/api/v1/projects/Chunky/versions/1.4.28/PAPER/download"
-        - name: SPIGET_RESOURCES
-          value: "34315,105424"
         - name: SPAWN_PROTECTION
           value: "0"
         - name: VIEW_DISTANCE
