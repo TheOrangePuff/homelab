@@ -176,38 +176,21 @@ spec:
           mountPath: /data/plugins/Backuper/config.yml
           subPath: config.yml
       volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-longhorn
+      - name: world
+        persistentVolumeClaim:
+          claimName: minecraft-world-longhorn
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: minecraft-world-nether-longhorn
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: minecraft-world-end-longhorn
       - name: backups
         persistentVolumeClaim:
-          claimName: minecraft-backups
+          claimName: minecraft-backups-longhorn
       - name: backuper-config
         configMap:
           name: minecraft-backuper-config
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 10Gi
-  - metadata:
-      name: world
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 50Gi
-  - metadata:
-      name: world-nether
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 20Gi
-  - metadata:
-      name: world-end
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 20Gi

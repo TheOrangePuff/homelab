@@ -5,7 +5,7 @@ resources:
   - statefulset.yaml
   - velocity-deployment.yaml
   - services.yaml
-  - pvcs.yaml
+  - longhorn-pvcs.yaml
   - configmap.yaml
   - backuper-configmap.yaml
   - backup-sealed-secret.yaml
