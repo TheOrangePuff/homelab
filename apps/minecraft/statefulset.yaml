@@ -13,6 +13,8 @@ spec:
       labels:
         app: minecraft-backend
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: modron-01
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -100,13 +102,7 @@ spec:
         - name: ENFORCE_WHITELIST
           value: "true"
         - name: ENABLE_AUTOSTOP
-          value: "TRUE"
-        - name: AUTOSTOP_TIMEOUT_EST
-          value: "3600"
-        - name: AUTOSTOP_TIMEOUT_INIT
-          value: "1800"
-        - name: AUTOSTOP_PERIOD
-          value: "10"
+          value: "FALSE"
         - name: VELOCITY_SECRET
           valueFrom:
             secretKeyRef:
