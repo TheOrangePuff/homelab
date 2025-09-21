@@ -120,6 +120,8 @@ spec:
           value: "true"
         - name: PAPER_VELOCITY_ONLINE_MODE
           value: "true"
+        - name: PLUGINS
+          value: "https://github.com/DVDishka/Backuper/releases/download/3.4.4/Backuper-3.4.4.jar"
         ports:
         - name: minecraft
           containerPort: 25565
