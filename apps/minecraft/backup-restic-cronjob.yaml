@@ -127,6 +127,6 @@ spec:
           volumes:
           - name: backups
             persistentVolumeClaim:
-              claimName: minecraft-backups
+              claimName: minecraft-backups-new
           - name: cache
             emptyDir: {}

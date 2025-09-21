@@ -45,6 +45,7 @@ spec:
           chown -R 1000:1000 /data/world
           chown -R 1000:1000 /data/world_nether
           chown -R 1000:1000 /data/world_the_end
+          chown -R 1000:1000 /data/plugins/Backuper/backups
         volumeMounts:
         - name: data
           mountPath: /data
@@ -54,6 +55,8 @@ spec:
           mountPath: /data/world_nether
         - name: world-end
           mountPath: /data/world_the_end
+        - name: backups
+          mountPath: /data/plugins/Backuper/backups
         securityContext:
           runAsUser: 0
           runAsNonRoot: false
@@ -167,6 +170,11 @@ spec:
           mountPath: /data/world_nether
         - name: world-end
           mountPath: /data/world_the_end
+        - name: backups
+          mountPath: /data/plugins/Backuper/backups
+        - name: backuper-config
+          mountPath: /data/plugins/Backuper/config.yml
+          subPath: config.yml
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -180,3 +188,9 @@ spec:
       - name: world-end
         persistentVolumeClaim:
           claimName: minecraft-world-end-longhorn
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups-new
+      - name: backuper-config
+        configMap:
+          name: minecraft-backuper-config
