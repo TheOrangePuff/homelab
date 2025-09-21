@@ -45,7 +45,7 @@ spec:
           chown -R 1000:1000 /data/world
           chown -R 1000:1000 /data/world_nether
           chown -R 1000:1000 /data/world_the_end
-          chown -R 1000:1000 /data/plugins/Backuper/backups
+          chown -R 1000:1000 /data/plugins/Backuper/Backups
         volumeMounts:
         - name: data
           mountPath: /data
@@ -56,7 +56,7 @@ spec:
         - name: world-end
           mountPath: /data/world_the_end
         - name: backups
-          mountPath: /data/plugins/Backuper/backups
+          mountPath: /data/plugins/Backuper/Backups
         securityContext:
           runAsUser: 0
           runAsNonRoot: false
@@ -173,7 +173,7 @@ spec:
         - name: world-end
           mountPath: /data/world_the_end
         - name: backups
-          mountPath: /data/plugins/Backuper/backups
+          mountPath: /data/plugins/Backuper/Backups
         - name: backuper-config
           mountPath: /data/plugins/Backuper/config.yml
           subPath: config.yml
