@@ -54,6 +54,8 @@ spec:
           value: "1000"
         - name: TZ
           value: "Australia/Adelaide"
+        - name: STHOMEDIR
+          value: "/config"
         ports:
         - name: web-ui
           containerPort: 8384
@@ -66,7 +68,7 @@ spec:
           protocol: UDP
         volumeMounts:
         - name: config
-          mountPath: /var/syncthing/config
+          mountPath: /config
         - name: mnt
           mountPath: /var/syncthing
       volumes:
