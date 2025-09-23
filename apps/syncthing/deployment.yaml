@@ -19,7 +19,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: syncthing
-        image: linuxserver/syncthing:1.30.0
+        image: syncthing/syncthing:2.0.9
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
@@ -66,9 +66,9 @@ spec:
           protocol: UDP
         volumeMounts:
         - name: config
-          mountPath: /config
+          mountPath: /var/syncthing/config
         - name: mnt
-          mountPath: /mnt
+          mountPath: /var/syncthing
       volumes:
       - name: config
         persistentVolumeClaim:
