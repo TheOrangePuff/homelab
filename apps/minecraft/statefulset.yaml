@@ -37,7 +37,7 @@ spec:
       initContainers:
       - name: fix-ownership
         image: busybox:1.35
-        command: 
+        command:
         - sh
         - -c
         - |
@@ -74,7 +74,7 @@ spec:
         - name: TYPE
           value: "PAPER"
         - name: VERSION
-          value: "1.21.8"
+          value: "1.21.9"
         - name: MEMORY
           value: "8G"
         - name: USE_AIKAR_FLAGS
