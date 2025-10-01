@@ -51,7 +51,7 @@ spec:
           runAsNonRoot: false
       containers:
       - name: velocity
-        image: itzg/bungeecord:latest
+        image: itzg/mc-proxy:java25
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
