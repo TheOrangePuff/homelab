@@ -4,6 +4,7 @@ metadata:
   name: unifi
 spec:
   type: LoadBalancer
+  loadBalancerIP: 192.168.0.243
   selector:
     app: unifi
   ports:
