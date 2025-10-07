@@ -9,6 +9,8 @@ data:
       level: DEBUG
     api:
       insecure: true
+    ping:
+      entryPoint: "web"
     entryPoints:
       web:
         address: ":80"

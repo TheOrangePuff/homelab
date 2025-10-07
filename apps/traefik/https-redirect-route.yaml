@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/`)
+    - match: PathPrefix(`/`) && !PathPrefix(`/ping`)
       kind: Rule
       priority: 5  # Higher priority than existing fallback (priority 1)
       middlewares:

@@ -37,19 +37,15 @@ spec:
             memory: "128Mi"
             cpu: "100m"
         livenessProbe:
-          httpGet:
-            path: /ping
-            port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ping
+          tcpSocket:
             port: 80
           initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
           periodSeconds: 5
-          timeoutSeconds: 3
         env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:

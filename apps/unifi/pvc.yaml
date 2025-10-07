@@ -1,8 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: unifi-config
+  name: unifi-config-longhorn
+  namespace: infra
 spec:
+  storageClassName: longhorn
   accessModes:
     - ReadWriteOnce
   resources:

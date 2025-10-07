@@ -74,4 +74,4 @@ spec:
       volumes:
       - name: unifi-config
         persistentVolumeClaim:
-          claimName: unifi-config
+          claimName: unifi-config-longhorn

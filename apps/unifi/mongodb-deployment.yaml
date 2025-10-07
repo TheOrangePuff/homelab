@@ -37,7 +37,7 @@ spec:
       volumes:
       - name: mongodb-data
         persistentVolumeClaim:
-          claimName: unifi-mongodb-data
+          claimName: unifi-mongodb-data-longhorn
 ---
 apiVersion: v1
 kind: Service
