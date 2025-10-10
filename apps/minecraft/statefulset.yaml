@@ -4,7 +4,7 @@ metadata:
   name: minecraft-backend
 spec:
   serviceName: minecraft-backend
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: minecraft-backend
