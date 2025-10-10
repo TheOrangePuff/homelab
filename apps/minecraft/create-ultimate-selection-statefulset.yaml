@@ -75,6 +75,11 @@ spec:
           value: "AUTO_CURSEFORGE"
         - name: CF_PAGE_URL
           value: "https://www.curseforge.com/minecraft/modpacks/create-ultimate-selection"
+        - name: CF_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-curseforge
+              key: cf-api-key
         - name: CF_DOWNLOADS_REPO
           value: "/data"
         - name: MEMORY
