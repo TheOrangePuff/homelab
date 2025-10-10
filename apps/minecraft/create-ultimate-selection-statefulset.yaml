@@ -124,7 +124,7 @@ spec:
           exec:
             command:
             - mc-health
-          initialDelaySeconds: 240
+          initialDelaySeconds: 360
           periodSeconds: 30
           timeoutSeconds: 10
           failureThreshold: 3
@@ -132,7 +132,7 @@ spec:
           exec:
             command:
             - mc-health
-          initialDelaySeconds: 60
+          initialDelaySeconds: 300
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 10
