@@ -1,0 +1,105 @@
+# Step 1: Backup pod that runs on beholder to tar up the data
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-backup-local
+  namespace: app
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/hostname: beholder
+      containers:
+      - name: backup
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Creating tarball backups..."
+          tar czf /tmp/data.tar.gz -C /data . 2>/dev/null || true
+          tar czf /tmp/world.tar.gz -C /world . 2>/dev/null || true
+          tar czf /tmp/world-nether.tar.gz -C /world-nether . 2>/dev/null || true
+          tar czf /tmp/world-end.tar.gz -C /world-end . 2>/dev/null || true
+          tar czf /tmp/backups.tar.gz -C /backups . 2>/dev/null || true
+          # Skip velocity - it's on modron-01
+          echo "Skipping velocity config (on different node)"
+          echo "Backups created. Keeping pod alive for copy..."
+          sleep 3600
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /world
+        - name: world-nether
+          mountPath: /world-nether
+        - name: world-end
+          mountPath: /world-end
+        - name: backups
+          mountPath: /backups
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0
+      - name: world
+        persistentVolumeClaim:
+          claimName: world-minecraft-backend-0
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: world-nether-minecraft-backend-0
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: world-end-minecraft-backend-0
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups
+---
+# Step 2: Restore pod that can run anywhere to restore to Longhorn
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-restore-longhorn
+  namespace: app
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: restore
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for restore command..."
+          echo "Run: kubectl cp app/<backup-pod>:/tmp/<file>.tar.gz /tmp/<file>.tar.gz"
+          echo "Then extract to volumes"
+          sleep 3600
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /world
+        - name: world-nether
+          mountPath: /world-nether
+        - name: world-end
+          mountPath: /world-end
+        - name: backups
+          mountPath: /backups
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-longhorn
+      - name: world
+        persistentVolumeClaim:
+          claimName: minecraft-world-longhorn
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: minecraft-world-nether-longhorn
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: minecraft-world-end-longhorn
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups-longhorn

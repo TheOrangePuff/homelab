@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-migration-backup
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path  # Use local-path for backup on beholder
+  resources:
+    requests:
+      storage: 200Gi

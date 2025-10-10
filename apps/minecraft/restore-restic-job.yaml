@@ -1,0 +1,194 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-restore
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: restore
+        image: restic/restic:0.18.0
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          echo "Starting Minecraft restore process from Backblaze B2..."
+          
+          # Install unzip for extracting backups
+          apk add --no-cache unzip
+          
+          # List available snapshots
+          echo "Available snapshots:"
+          restic snapshots --tag minecraft
+          
+          # Determine which snapshot to restore
+          if [ -z "$SNAPSHOT_ID" ]; then
+            echo "No SNAPSHOT_ID specified, using latest snapshot"
+            SNAPSHOT_ID="latest"
+          fi
+          
+          echo "Restoring from snapshot: $SNAPSHOT_ID"
+          
+          # Create restore directory
+          RESTORE_DIR="/restore/$(date +%Y%m%d-%H%M%S)"
+          mkdir -p "$RESTORE_DIR"
+          
+          # Restore backups from restic to temporary location
+          echo "Downloading backups from Backblaze B2..."
+          restic restore $SNAPSHOT_ID \
+            --target "$RESTORE_DIR" \
+            --include "/backups" \
+            --verbose
+          
+          # List available backup files
+          echo ""
+          echo "Available backup files:"
+          ls -lah "$RESTORE_DIR/backups/"*.zip 2>/dev/null || echo "No backup files found"
+          
+          # If BACKUP_FILE is specified, extract that specific backup
+          if [ -n "$BACKUP_FILE" ]; then
+            BACKUP_PATH="$RESTORE_DIR/backups/$BACKUP_FILE"
+            if [ -f "$BACKUP_PATH" ]; then
+              echo "Extracting backup: $BACKUP_FILE"
+              
+              # Backup current data before restore (safety)
+              echo "Creating backup of current world data..."
+              if [ -d /data/world ]; then
+                mkdir -p /backup/pre-restore
+                cp -a /data/world /backup/pre-restore/ 2>/dev/null || true
+                cp -a /data/world_nether /backup/pre-restore/ 2>/dev/null || true
+                cp -a /data/world_the_end /backup/pre-restore/ 2>/dev/null || true
+              fi
+              
+              # Extract the backup
+              unzip -o "$BACKUP_PATH" -d /data/
+              echo "Backup extracted successfully"
+            else
+              echo "ERROR: Backup file $BACKUP_FILE not found!"
+              exit 1
+            fi
+          else
+            # Find and extract the latest backup
+            LATEST_BACKUP=$(ls -t "$RESTORE_DIR/backups/"*.zip 2>/dev/null | head -1)
+            if [ -n "$LATEST_BACKUP" ]; then
+              echo "Extracting latest backup: $(basename $LATEST_BACKUP)"
+              
+              # Backup current data before restore (safety)
+              echo "Creating backup of current world data..."
+              if [ -d /data/world ]; then
+                mkdir -p /backup/pre-restore
+                cp -a /data/world /backup/pre-restore/ 2>/dev/null || true
+                cp -a /data/world_nether /backup/pre-restore/ 2>/dev/null || true
+                cp -a /data/world_the_end /backup/pre-restore/ 2>/dev/null || true
+              fi
+              
+              # Extract the backup
+              unzip -o "$LATEST_BACKUP" -d /data/
+              echo "Backup extracted successfully"
+            else
+              echo "ERROR: No backup files found in snapshot!"
+              exit 1
+            fi
+          fi
+          
+          echo ""
+          echo "Restore completed successfully"
+          echo "Restored worlds:"
+          ls -la /data/world/ 2>/dev/null || echo "Main world not found"
+          ls -la /data/world_nether/ 2>/dev/null || echo "Nether not found"
+          ls -la /data/world_the_end/ 2>/dev/null || echo "End not found"
+          
+          # Copy restored backup to the shared backup volume for reference
+          echo "Copying restored backup to shared volume..."
+          mkdir -p /backups/restored
+          cp "$RESTORE_DIR/backups/"*.zip /backups/restored/ 2>/dev/null || true
+          
+          echo ""
+          echo "IMPORTANT: Restart the Minecraft pods to use restored data:"
+          echo "  kubectl delete pod -n app -l app=minecraft-backend"
+          
+        env:
+        - name: SNAPSHOT_ID
+          value: "latest"  # Change to specific snapshot ID if needed
+        - name: BACKUP_FILE
+          value: ""  # Specify a backup filename to restore specific backup
+        - name: RESTIC_REPOSITORY
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-backup-config
+              key: repository
+        - name: RESTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-backup-config
+              key: password
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-backup-config
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-backup-config
+              key: aws-secret-access-key
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: minecraft-backup-config
+              key: aws-region
+        - name: AWS_S3_FORCE_PATH_STYLE
+          value: "false"
+        volumeMounts:
+        - name: world
+          mountPath: /data/world
+        - name: world-nether
+          mountPath: /data/world_nether
+        - name: world-end
+          mountPath: /data/world_the_end
+        - name: backups
+          mountPath: /backups
+        - name: backup
+          mountPath: /backup
+        - name: restore
+          mountPath: /restore
+        - name: cache
+          mountPath: /cache
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+      restartPolicy: Never
+      volumes:
+      - name: world
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0-world-minecraft-backend-0
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0-world-nether-minecraft-backend-0
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0-world-end-minecraft-backend-0
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups
+      - name: backup
+        emptyDir: {}
+      - name: restore
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}

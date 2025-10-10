@@ -1,0 +1,79 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-backup-for-migration
+  namespace: app
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/hostname: beholder  # Must run on beholder to access local-path volumes
+      containers:
+      - name: backup
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Creating backup of all Minecraft data..."
+          
+          # Create tar archives of each volume
+          echo "Backing up data volume..."
+          tar czf /backup/data.tar.gz -C /data .
+          
+          echo "Backing up world volume..."
+          tar czf /backup/world.tar.gz -C /world .
+          
+          echo "Backing up world-nether volume..."
+          tar czf /backup/world-nether.tar.gz -C /world-nether .
+          
+          echo "Backing up world-end volume..."
+          tar czf /backup/world-end.tar.gz -C /world-end .
+          
+          echo "Backing up backups volume..."
+          tar czf /backup/backups.tar.gz -C /backups .
+          
+          echo "Backing up velocity config volume..."
+          tar czf /backup/velocity.tar.gz -C /velocity .
+          
+          echo "Backup complete! Files created in /backup"
+          ls -lah /backup/
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /world
+        - name: world-nether
+          mountPath: /world-nether
+        - name: world-end
+          mountPath: /world-end
+        - name: backups
+          mountPath: /backups
+        - name: velocity
+          mountPath: /velocity
+        - name: backup-volume
+          mountPath: /backup
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0
+      - name: world
+        persistentVolumeClaim:
+          claimName: world-minecraft-backend-0
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: world-nether-minecraft-backend-0
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: world-end-minecraft-backend-0
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups
+      - name: velocity
+        persistentVolumeClaim:
+          claimName: minecraft-velocity-config
+      - name: backup-volume
+        persistentVolumeClaim:
+          claimName: minecraft-migration-backup
