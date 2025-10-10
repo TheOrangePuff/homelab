@@ -73,8 +73,8 @@ spec:
           value: "TRUE"
         - name: TYPE
           value: "CURSEFORGE"
-        - name: CF_MODPACK_ZIP
-          value: "/data/Create-Ultimate Selection MC 1.20.1-16.1.0.zip"
+        - name: CF_SERVER_MOD
+          value: "/data/Create-Ultimate Selection Serverpack MC 1.20.1-16.1.0.zip"
         - name: MEMORY
           value: "12G"
         - name: USE_AIKAR_FLAGS
