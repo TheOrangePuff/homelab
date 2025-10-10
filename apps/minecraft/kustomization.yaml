@@ -15,3 +15,4 @@ resources:
   - curseforge-sealed-secret.yaml
   - create-ultimate-selection-pvcs.yaml
   - create-ultimate-selection-statefulset.yaml
+  - create-ultimate-selection-loadbalancer.yaml
