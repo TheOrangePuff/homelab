@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-data-restore
+  namespace: app
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/hostname: modron-01
+      containers:
+      - name: restore
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Ready to receive data. Keeping pod alive..."
+          sleep 3600
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /world
+        - name: world-nether
+          mountPath: /world-nether
+        - name: world-end
+          mountPath: /world-end
+        - name: backups
+          mountPath: /backups
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-longhorn
+      - name: world
+        persistentVolumeClaim:
+          claimName: minecraft-world-longhorn
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: minecraft-world-nether-longhorn
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: minecraft-world-end-longhorn
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups-longhorn

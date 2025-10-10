@@ -1,0 +1,208 @@
+# Migration job to copy data from local-path PVCs to new Longhorn PVCs
+# This will create new Longhorn PVCs and copy all data from existing ones
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-data-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-world-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-world-nether-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-world-end-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-backups-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft-velocity-config-longhorn
+  namespace: app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-migrate-to-longhorn
+  namespace: app
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      restartPolicy: Never
+      # Let Kubernetes schedule based on volume affinity
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - beholder
+      containers:
+      - name: migrate-data
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Starting migration of Minecraft data to Longhorn..."
+          
+          echo "Copying data volume..."
+          cp -av /old-data/* /new-data/ 2>/dev/null || true
+          echo "Data volume copied."
+          
+          echo "Copying world volume..."
+          cp -av /old-world/* /new-world/ 2>/dev/null || true
+          echo "World volume copied."
+          
+          echo "Copying world-nether volume..."
+          cp -av /old-world-nether/* /new-world-nether/ 2>/dev/null || true
+          echo "World-nether volume copied."
+          
+          echo "Copying world-end volume..."
+          cp -av /old-world-end/* /new-world-end/ 2>/dev/null || true
+          echo "World-end volume copied."
+          
+          echo "Copying backups volume..."
+          cp -av /old-backups/* /new-backups/ 2>/dev/null || true
+          echo "Backups volume copied."
+          
+          echo "Copying velocity config volume..."
+          cp -av /old-velocity/* /new-velocity/ 2>/dev/null || true
+          echo "Velocity config volume copied."
+          
+          echo "Setting permissions..."
+          chown -R 1000:1000 /new-data
+          chown -R 1000:1000 /new-world
+          chown -R 1000:1000 /new-world-nether
+          chown -R 1000:1000 /new-world-end
+          chown -R 1000:1000 /new-backups
+          chown -R 1000:1000 /new-velocity
+          
+          echo "Migration complete!"
+        volumeMounts:
+        # Old volumes (local-path)
+        - name: old-data
+          mountPath: /old-data
+        - name: old-world
+          mountPath: /old-world
+        - name: old-world-nether
+          mountPath: /old-world-nether
+        - name: old-world-end
+          mountPath: /old-world-end
+        - name: old-backups
+          mountPath: /old-backups
+        - name: old-velocity
+          mountPath: /old-velocity
+        # New volumes (Longhorn)
+        - name: new-data
+          mountPath: /new-data
+        - name: new-world
+          mountPath: /new-world
+        - name: new-world-nether
+          mountPath: /new-world-nether
+        - name: new-world-end
+          mountPath: /new-world-end
+        - name: new-backups
+          mountPath: /new-backups
+        - name: new-velocity
+          mountPath: /new-velocity
+      volumes:
+      # Old volumes
+      - name: old-data
+        persistentVolumeClaim:
+          claimName: data-minecraft-backend-0
+      - name: old-world
+        persistentVolumeClaim:
+          claimName: world-minecraft-backend-0
+      - name: old-world-nether
+        persistentVolumeClaim:
+          claimName: world-nether-minecraft-backend-0
+      - name: old-world-end
+        persistentVolumeClaim:
+          claimName: world-end-minecraft-backend-0
+      - name: old-backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups
+      - name: old-velocity
+        persistentVolumeClaim:
+          claimName: minecraft-velocity-config
+      # New volumes
+      - name: new-data
+        persistentVolumeClaim:
+          claimName: minecraft-data-longhorn
+      - name: new-world
+        persistentVolumeClaim:
+          claimName: minecraft-world-longhorn
+      - name: new-world-nether
+        persistentVolumeClaim:
+          claimName: minecraft-world-nether-longhorn
+      - name: new-world-end
+        persistentVolumeClaim:
+          claimName: minecraft-world-end-longhorn
+      - name: new-backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups-longhorn
+      - name: new-velocity
+        persistentVolumeClaim:
+          claimName: minecraft-velocity-config-longhorn

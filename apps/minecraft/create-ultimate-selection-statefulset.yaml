@@ -72,9 +72,11 @@ spec:
         - name: EULA
           value: "TRUE"
         - name: TYPE
-          value: "CURSEFORGE"
-        - name: CF_SERVER_MOD
-          value: "/data/Create-Ultimate Selection Serverpack MC 1.20.1-16.1.0.zip"
+          value: "AUTO_CURSEFORGE"
+        - name: CF_PAGE_URL
+          value: "https://www.curseforge.com/minecraft/modpacks/create-ultimate-selection"
+        - name: CF_DOWNLOADS_REPO
+          value: "/data"
         - name: MEMORY
           value: "12G"
         - name: USE_AIKAR_FLAGS

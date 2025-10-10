@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minecraft-restore-data
+  namespace: app
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: restore
+        image: busybox:1.35
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for backup files to be copied..."
+          echo "Run the following commands on the host to copy backup files:"
+          echo "kubectl cp app/minecraft-backup-local-pzllc:/tmp/data.tar.gz /tmp/data.tar.gz"
+          echo "kubectl cp app/minecraft-backup-local-pzllc:/tmp/world.tar.gz /tmp/world.tar.gz"
+          echo "kubectl cp app/minecraft-backup-local-pzllc:/tmp/world-nether.tar.gz /tmp/world-nether.tar.gz"
+          echo "kubectl cp app/minecraft-backup-local-pzllc:/tmp/world-end.tar.gz /tmp/world-end.tar.gz"
+          echo "kubectl cp app/minecraft-backup-local-pzllc:/tmp/backups.tar.gz /tmp/backups.tar.gz"
+          echo ""
+          echo "Then copy to this pod and extract:"
+          echo "kubectl cp /tmp/data.tar.gz app/minecraft-restore-data-xxxxx:/tmp/data.tar.gz"
+          echo "kubectl cp /tmp/world.tar.gz app/minecraft-restore-data-xxxxx:/tmp/world.tar.gz"
+          echo "kubectl cp /tmp/world-nether.tar.gz app/minecraft-restore-data-xxxxx:/tmp/world-nether.tar.gz"
+          echo "kubectl cp /tmp/world-end.tar.gz app/minecraft-restore-data-xxxxx:/tmp/world-end.tar.gz"
+          echo "kubectl cp /tmp/backups.tar.gz app/minecraft-restore-data-xxxxx:/tmp/backups.tar.gz"
+          echo ""
+          echo "Then run: kubectl exec -n app minecraft-restore-data-xxxxx -- sh -c 'cd /data && tar xzf /tmp/data.tar.gz && cd /world && tar xzf /tmp/world.tar.gz && cd /world-nether && tar xzf /tmp/world-nether.tar.gz && cd /world-end && tar xzf /tmp/world-end.tar.gz && cd /backups && tar xzf /tmp/backups.tar.gz && chown -R 1000:1000 /data /world /world-nether /world-end /backups'"
+          
+          # Keep container alive for manual operations
+          sleep 3600
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: world
+          mountPath: /world
+        - name: world-nether
+          mountPath: /world-nether
+        - name: world-end
+          mountPath: /world-end
+        - name: backups
+          mountPath: /backups
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-longhorn
+      - name: world
+        persistentVolumeClaim:
+          claimName: minecraft-world-longhorn
+      - name: world-nether
+        persistentVolumeClaim:
+          claimName: minecraft-world-nether-longhorn
+      - name: world-end
+        persistentVolumeClaim:
+          claimName: minecraft-world-end-longhorn
+      - name: backups
+        persistentVolumeClaim:
+          claimName: minecraft-backups-longhorn

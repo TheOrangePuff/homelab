@@ -1,0 +1,112 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vaultwarden-restore
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: restore
+        image: restic/restic:0.16.4
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          echo "Starting Vaultwarden restore process..."
+          
+          # List available snapshots
+          echo "Available snapshots:"
+          restic snapshots
+          
+          # Determine which snapshot to restore
+          if [ -z "$SNAPSHOT_ID" ]; then
+            echo "No SNAPSHOT_ID specified, using latest snapshot"
+            SNAPSHOT_ID="latest"
+          fi
+          
+          echo "Restoring from snapshot: $SNAPSHOT_ID"
+          
+          # Backup current data before restore (safety)
+          if [ -d /data/db.sqlite3 ]; then
+            echo "Backing up current data to /data/pre-restore-backup..."
+            mkdir -p /data/pre-restore-backup
+            cp -a /data/* /data/pre-restore-backup/ 2>/dev/null || true
+          fi
+          
+          # Restore from restic
+          echo "Restoring data..."
+          restic restore $SNAPSHOT_ID \
+            --target / \
+            --include /data \
+            --verbose
+          
+          echo "Restore completed successfully"
+          echo "Files in /data:"
+          ls -la /data/
+          
+          echo ""
+          echo "IMPORTANT: Restart the Vaultwarden pod to use restored data:"
+          echo "  kubectl delete pod -n app -l app=vaultwarden"
+          
+        env:
+        # Snapshot ID to restore (optional - defaults to latest)
+        - name: SNAPSHOT_ID
+          value: "latest"  # Change to specific snapshot ID if needed
+        # Repository configuration
+        - name: RESTIC_REPOSITORY
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-backup-config
+              key: repository
+        - name: RESTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-backup-config
+              key: password
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-backup-config
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-backup-config
+              key: aws-secret-access-key
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: vaultwarden-backup-config
+              key: aws-region
+        - name: AWS_S3_FORCE_PATH_STYLE
+          value: "false"
+        volumeMounts:
+        - name: vaultwarden-data
+          mountPath: /data
+        - name: cache
+          mountPath: /cache
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+      restartPolicy: Never
+      volumes:
+      - name: vaultwarden-data
+        persistentVolumeClaim:
+          claimName: vaultwarden-data
+      - name: cache
+        emptyDir: {}
