@@ -72,14 +72,9 @@ spec:
         - name: EULA
           value: "TRUE"
         - name: TYPE
-          value: "AUTO_CURSEFORGE"
-        - name: CF_PAGE_URL
-          value: "https://www.curseforge.com/minecraft/modpacks/create-ultimate-selection"
-        - name: CF_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: minecraft-curseforge
-              key: cf-api-key
+          value: "CURSEFORGE"
+        - name: CF_MODPACK_ZIP
+          value: "/data/Create-Ultimate Selection MC 1.20.1-16.1.0.zip"
         - name: MEMORY
           value: "12G"
         - name: USE_AIKAR_FLAGS
