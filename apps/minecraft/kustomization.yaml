@@ -12,3 +12,6 @@ resources:
   - backup-restic-cronjob.yaml
   - rcon-sealed-secret.yaml
   - velocity-sealed-secret.yaml
+  - curseforge-sealed-secret.yaml
+  - create-ultimate-selection-pvcs.yaml
+  - create-ultimate-selection-statefulset.yaml

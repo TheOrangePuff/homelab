@@ -22,12 +22,15 @@ data:
     # Server list
     [servers]
     main = "minecraft-backend:25565"
-    
+    create-ultimate-selection = "minecraft-create-ultimate-selection:25565"
+
     # Default server
-    try = ["main"]
-    
+    try = ["main", "create-ultimate-selection"]
+
     # Forced hosts - optional
     [forced-hosts]
+    "vanilla.theorangeserver.net" = "main"
+    "create.theorangeserver.net" = "create-ultimate-selection"
     
     # Advanced settings
     [advanced]
