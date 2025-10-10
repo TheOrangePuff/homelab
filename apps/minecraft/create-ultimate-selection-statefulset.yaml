@@ -98,16 +98,16 @@ spec:
         - name: SERVER_PORT
           value: "25565"
         - name: ONLINE_MODE
-          value: "false"
+          value: "true"
         - name: VELOCITY_SECRET
           valueFrom:
             secretKeyRef:
               name: minecraft-velocity
               key: forwarding-secret
         - name: WHITELIST
-          value: "true"
+          value: "false"
         - name: ENFORCE_WHITELIST
-          value: "true"
+          value: "false"
         - name: ENABLE_AUTOSTOP
           value: "FALSE"
         - name: SPAWN_PROTECTION
