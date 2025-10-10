@@ -25,7 +25,7 @@ data:
     create-ultimate-selection = "minecraft-create-ultimate-selection:25565"
 
     # Default server
-    try = ["create-ultimate-selection", "main"]
+    try = ["create-ultimate-selection"]
 
     # Forced hosts - optional
     [forced-hosts]
