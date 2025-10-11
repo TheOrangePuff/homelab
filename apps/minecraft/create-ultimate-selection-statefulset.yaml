@@ -14,7 +14,7 @@ spec:
         app: minecraft-create-ultimate-selection
     spec:
       nodeSelector:
-        kubernetes.io/hostname: modron-01
+        kubernetes.io/hostname: beholder
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -145,10 +145,10 @@ spec:
           failureThreshold: 10
         resources:
           limits:
-            memory: "16Gi"
-            cpu: "10000m"
-          requests:
             memory: "12Gi"
+            cpu: "6000m"
+          requests:
+            memory: "8Gi"
             cpu: "4000m"
         lifecycle:
           preStop:
