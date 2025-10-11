@@ -146,10 +146,10 @@ spec:
         resources:
           limits:
             memory: "16Gi"
-            cpu: "8000m"
+            cpu: "10000m"
           requests:
             memory: "12Gi"
-            cpu: "2000m"
+            cpu: "4000m"
         lifecycle:
           preStop:
             exec:
