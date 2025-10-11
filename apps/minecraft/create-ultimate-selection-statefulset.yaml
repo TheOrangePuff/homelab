@@ -113,7 +113,7 @@ spec:
         - name: SPAWN_PROTECTION
           value: "0"
         - name: VIEW_DISTANCE
-          value: "10"
+          value: "6"
         - name: MODE
           value: "survival"
         - name: DIFFICULTY
@@ -146,10 +146,10 @@ spec:
         resources:
           limits:
             memory: "16Gi"
-            cpu: "4000m"
+            cpu: "8000m"
           requests:
             memory: "12Gi"
-            cpu: "1000m"
+            cpu: "2000m"
         lifecycle:
           preStop:
             exec:
