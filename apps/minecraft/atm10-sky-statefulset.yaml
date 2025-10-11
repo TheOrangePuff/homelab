@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: minecraft-create-ultimate-selection
+  name: minecraft-atm10-sky
 spec:
-  serviceName: minecraft-create-ultimate-selection
-  replicas: 0
+  serviceName: minecraft-atm10-sky
+  replicas: 1
   selector:
     matchLabels:
-      app: minecraft-create-ultimate-selection
+      app: minecraft-atm10-sky
   template:
     metadata:
       labels:
-        app: minecraft-create-ultimate-selection
+        app: minecraft-atm10-sky
     spec:
       nodeSelector:
         kubernetes.io/hostname: beholder
@@ -25,7 +25,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - minecraft-create-ultimate-selection
+                  - minecraft-atm10-sky
               topologyKey: kubernetes.io/hostname
       securityContext:
         runAsNonRoot: true
@@ -74,7 +74,7 @@ spec:
         - name: TYPE
           value: "AUTO_CURSEFORGE"
         - name: CF_PAGE_URL
-          value: "https://www.curseforge.com/minecraft/modpacks/create-ultimate-selection"
+          value: "https://www.curseforge.com/minecraft/modpacks/all-the-mods-10-sky"
         - name: CF_API_KEY
           valueFrom:
             secretKeyRef:
@@ -113,7 +113,7 @@ spec:
         - name: SPAWN_PROTECTION
           value: "0"
         - name: VIEW_DISTANCE
-          value: "6"
+          value: "16"
         - name: MODE
           value: "survival"
         - name: DIFFICULTY
@@ -177,19 +177,19 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: minecraft-create-ultimate-selection-data
+          claimName: minecraft-atm10-sky-data
       - name: world
         persistentVolumeClaim:
-          claimName: minecraft-create-ultimate-selection-world
+          claimName: minecraft-atm10-sky-world
       - name: world-nether
         persistentVolumeClaim:
-          claimName: minecraft-create-ultimate-selection-world-nether
+          claimName: minecraft-atm10-sky-world-nether
       - name: world-end
         persistentVolumeClaim:
-          claimName: minecraft-create-ultimate-selection-world-end
+          claimName: minecraft-atm10-sky-world-end
       - name: backups
         persistentVolumeClaim:
-          claimName: minecraft-create-ultimate-selection-backups
+          claimName: minecraft-atm10-sky-backups
       - name: backuper-config
         configMap:
           name: minecraft-backuper-config
