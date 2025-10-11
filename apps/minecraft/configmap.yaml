@@ -15,7 +15,7 @@ data:
     prevent-client-proxy-connections = false
     player-info-forwarding-mode = "modern"
     forwarding-secret-file = "/config/forwarding.secret"
-    announce-forge = false
+    announce-forge = true
     kick-existing-players = false
     ping-passthrough = "DISABLED"
     
@@ -23,22 +23,24 @@ data:
     [servers]
     main = "minecraft-backend:25565"
     create-ultimate-selection = "minecraft-create-ultimate-selection:25565"
+    atm10-sky = "minecraft-atm10-sky:25565"
 
     # Default server
-    try = ["create-ultimate-selection"]
+    try = ["atm10-sky"]
 
     # Forced hosts - optional
     [forced-hosts]
     "vanilla.theorangeserver.net" = "main"
     "create.theorangeserver.net" = "create-ultimate-selection"
+    "atm10.theorangeserver.net" = "atm10-sky"
     
     # Advanced settings
     [advanced]
     compression-threshold = 256
     compression-level = -1
     login-ratelimit = 3000
-    connection-timeout = 5000
-    read-timeout = 30000
+    connection-timeout = 10000
+    read-timeout = 60000
     haproxy-protocol = false
     tcp-fast-open = false
     bungee-plugin-message-channel = true
