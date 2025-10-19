@@ -6,7 +6,7 @@ data:
   velocity.toml: |
     # Velocity configuration
     config-version = "2.7"
-    
+
     # Network settings
     bind = "0.0.0.0:25577"
     motd = "<gradient:#ff6600:#ff9933>🍊 TheOrangeServer</gradient>"
@@ -18,22 +18,18 @@ data:
     announce-forge = true
     kick-existing-players = false
     ping-passthrough = "DISABLED"
-    
+
     # Server list
     [servers]
     main = "minecraft-backend:25565"
-    create-ultimate-selection = "minecraft-create-ultimate-selection:25565"
-    atm10-sky = "minecraft-atm10-sky:25565"
 
     # Default server
-    try = ["atm10-sky"]
+    try = ["main"]
 
     # Forced hosts - optional
     [forced-hosts]
     "vanilla.theorangeserver.net" = "main"
-    "create.theorangeserver.net" = "create-ultimate-selection"
-    "atm10.theorangeserver.net" = "atm10-sky"
-    
+
     # Advanced settings
     [advanced]
     compression-threshold = 256
@@ -49,7 +45,7 @@ data:
     announce-proxy-commands = true
     log-command-executions = false
     log-player-connections = true
-    
+
     # Query settings
     [query]
     enabled = false
