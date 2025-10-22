@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: vaultwarden
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: web-ui
     port: 80
