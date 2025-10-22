@@ -8,6 +8,7 @@ resources:
   - deployment.yaml
   - configmap.yaml
   - service.yaml
+  - ingressclass.yaml
   - dashboard-ingressroute.yaml
   - docker-backend.yaml
   - fallback-route.yaml
