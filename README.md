@@ -23,7 +23,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 - [ ] Authentik
 - [ ] CrowdSec
 - [ ] SOPS
-- [ ] Vaultwarden
+- [x] Vaultwarden
 
 ### Observability
 
@@ -81,6 +81,6 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 TBA
 
-## Deploymnets
+## Deployments
 
 Deployments are automatically handled through FluxCD. All code committed to main is picked up by FluxCD and automatically published to my cluster 🚀
