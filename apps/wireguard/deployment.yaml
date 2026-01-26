@@ -36,7 +36,7 @@ spec:
             - name: PEERS
               value: "phone"
             - name: PEERDNS
-              value: "auto"
+              value: "1.1.1.1"
             - name: INTERNAL_SUBNET
               value: "10.10.50.0"
           volumeMounts:
