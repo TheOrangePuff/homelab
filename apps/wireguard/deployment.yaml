@@ -14,25 +14,35 @@ spec:
     spec:
       hostNetwork: false
       containers:
-      - name: wireguard
-        image: linuxserver/wireguard:1.0.20210914
-        securityContext:
-          capabilities:
-            add:
-              - NET_ADMIN
-              - SYS_MODULE
-          privileged: false
-        env:
-          - name: PUID
-            value: "1000"
-          - name: PGID
-            value: "1000"
-          - name: TZ
-            value: "Australia/Adelaide"
-        volumeMounts:
-        - name: config
-          mountPath: /config
+        - name: wireguard
+          image: linuxserver/wireguard:1.0.20250521
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
+            privileged: false
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Australia/Adelaide"
+            - name: SERVERURL
+              value: "theorangeserver.net"
+            - name: SERVERPORT
+              value: "31820"
+            - name: PEERS
+              value: "phone"
+            - name: PEERDNS
+              value: "auto"
+            - name: INTERNAL_SUBNET
+              value: "10.10.50.0"
+          volumeMounts:
+            - name: config
+              mountPath: /config
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: wireguard
+        - name: config
+          persistentVolumeClaim:
+            claimName: wireguard
