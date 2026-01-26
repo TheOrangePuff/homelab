@@ -32,7 +32,7 @@ spec:
             - name: SERVERURL
               value: "theorangeserver.net"
             - name: SERVERPORT
-              value: "31820"
+              value: "51820"
             - name: PEERS
               value: "phone"
             - name: PEERDNS
