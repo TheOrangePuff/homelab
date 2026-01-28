@@ -36,7 +36,7 @@ spec:
       terminationGracePeriodSeconds: 300
       initContainers:
       - name: fix-ownership
-        image: busybox:1.35
+        image: busybox:1.37
         command:
         - sh
         - -c
