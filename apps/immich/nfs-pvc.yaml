@@ -8,4 +8,6 @@ spec:
     - ReadWriteOnce
   storageClassName: ""
   volumeName: immich-library
-  resources: {}
+  resources:
+    requests:
+      storage: 10Ti
