@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-library
+spec:
+  capacity:
+    storage: 10Ti
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 192.168.0.210
+    path: /mnt/storage/personal/immich
+  persistentVolumeReclaimPolicy: Retain
