@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: immich
-        namespace: flux-system
+        namespace: app
   values:
     valkey:
       enabled: true
