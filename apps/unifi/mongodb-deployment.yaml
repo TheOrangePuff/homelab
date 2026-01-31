@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: mongo:8.2
+        image: mongo:7.0
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
