@@ -16,6 +16,7 @@ rules:
       - endpoints
       - secrets
       - configmaps
+      - nodes
     verbs:
       - get
       - list
