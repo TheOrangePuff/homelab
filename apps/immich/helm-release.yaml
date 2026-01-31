@@ -32,6 +32,8 @@ spec:
       main:
         containers:
           main:
+            image:
+              tag: v2.5.2
             env:
               REDIS_HOSTNAME: immich-valkey
               IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
