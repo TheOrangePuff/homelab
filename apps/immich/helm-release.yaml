@@ -14,6 +14,13 @@ spec:
         name: immich
         namespace: app
   values:
+    env:
+      DB_HOSTNAME: database
+      DB_DATABASE_NAME: immich
+    envFrom:
+      - secretRef:
+          name: immich-db-credentials
+
     valkey:
       enabled: true
 

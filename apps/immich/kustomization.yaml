@@ -7,3 +7,5 @@ resources:
   - nfs-pv.yaml
   - nfs-pvc.yaml
   - ingress.yaml
+  - postgres.yaml
+  - db-credentials-sealed-secret.yaml
