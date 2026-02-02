@@ -1,12 +1,13 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: vaultwarden-backup
+  name: immich-backup
   namespace: app
 spec:
-  schedule: "0 * * * *"  # Every hour
+  schedule: "0 3 * * *"  # Daily at 3 AM
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
@@ -16,6 +17,49 @@ spec:
             runAsUser: 1000
             runAsGroup: 1000
             fsGroup: 1000
+          initContainers:
+          - name: pg-dump
+            image: tensorchord/pgvecto-rs:pg16-v0.2.0
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "Starting PostgreSQL dump at $(date)"
+              PGPASSWORD="$DB_PASSWORD" pg_dump \
+                -h database \
+                -U "$DB_USERNAME" \
+                -d immich \
+                --format=custom \
+                --compress=9 \
+                -f /backup/immich-db.dump
+              echo "Database dump completed: $(ls -lh /backup/immich-db.dump)"
+            env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db-credentials
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db-credentials
+                  key: DB_PASSWORD
+            volumeMounts:
+            - name: backup-staging
+              mountPath: /backup
+            resources:
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
           containers:
           - name: backup
             image: restic/restic:0.18.1
@@ -30,39 +74,49 @@ spec:
             - |
               set -e
               export RESTIC_REPOSITORY="s3:${B2_ENDPOINT}/${B2_BUCKET}/${BACKUP_PATH}"
-              echo "Starting Vaultwarden backup at $(date)"
+              echo "Starting Immich backup at $(date)"
 
               # Initialize repository if it doesn't exist
               restic snapshots &>/dev/null || {
                 echo "Initializing restic repository..."
                 restic init
               }
-              
-              # Create backup of entire data directory
-              restic backup /data \
-                --tag vaultwarden \
+
+              # Backup database dump
+              echo "Backing up database..."
+              restic backup /backup \
+                --tag immich \
+                --tag database \
                 --tag automated \
-                --host vaultwarden-k8s \
+                --host immich-k8s \
                 --verbose
-              
+
+              # Backup media library
+              echo "Backing up media library..."
+              restic backup /library \
+                --tag immich \
+                --tag media \
+                --tag automated \
+                --host immich-k8s \
+                --verbose
+
               # Show backup statistics
               echo "Backup completed. Current snapshots:"
               restic snapshots
-              
+
               # Prune old backups based on retention policy
               echo "Pruning old backups..."
               restic forget \
-                --keep-hourly 24 \
                 --keep-daily 7 \
                 --keep-weekly 4 \
-                --keep-monthly 3 \
+                --keep-monthly 6 \
                 --prune \
                 --tag automated
-              
+
               # Check repository integrity (quick check)
               echo "Checking repository integrity..."
               restic check --read-data-subset=1%
-              
+
               echo "Backup job completed successfully at $(date)"
             env:
             - name: B2_ENDPOINT
@@ -76,11 +130,11 @@ spec:
                   name: b2-credentials
                   key: b2-bucket
             - name: BACKUP_PATH
-              value: "vaultwarden"
+              value: "immich"
             - name: RESTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: vaultwarden-backup-config
+                  name: immich-backup-config
                   key: password
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -97,25 +151,28 @@ spec:
                 secretKeyRef:
                   name: b2-credentials
                   key: aws-region
-            - name: AWS_S3_FORCE_PATH_STYLE
-              value: "false"
             volumeMounts:
-            - name: vaultwarden-data
-              mountPath: /data
+            - name: backup-staging
+              mountPath: /backup
+              readOnly: true
+            - name: library
+              mountPath: /library
               readOnly: true
             - name: cache
-              mountPath: /cache
+              mountPath: /root/.cache/restic
             resources:
               limits:
-                memory: "512Mi"
-                cpu: "500m"
+                memory: "1Gi"
+                cpu: "1000m"
               requests:
-                memory: "256Mi"
-                cpu: "100m"
+                memory: "512Mi"
+                cpu: "200m"
           restartPolicy: OnFailure
           volumes:
-          - name: vaultwarden-data
+          - name: backup-staging
+            emptyDir: {}
+          - name: library
             persistentVolumeClaim:
-              claimName: vaultwarden-data
+              claimName: immich-library
           - name: cache
             emptyDir: {}

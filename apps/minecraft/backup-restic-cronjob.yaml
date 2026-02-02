@@ -28,8 +28,9 @@ spec:
             - -c
             - |
               set -e
+              export RESTIC_REPOSITORY="s3:${B2_ENDPOINT}/${B2_BUCKET}/${BACKUP_PATH}"
               echo "Starting Minecraft backup sync to Backblaze B2 at $(date)"
-              
+
               # Initialize repository if it doesn't exist
               restic snapshots &>/dev/null || {
                 echo "Initializing restic repository..."
@@ -83,11 +84,18 @@ spec:
               
               echo "Backup sync job completed successfully at $(date)"
             env:
-            - name: RESTIC_REPOSITORY
+            - name: B2_ENDPOINT
               valueFrom:
                 secretKeyRef:
-                  name: minecraft-backup-config
-                  key: repository
+                  name: b2-credentials
+                  key: b2-endpoint
+            - name: B2_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: b2-credentials
+                  key: b2-bucket
+            - name: BACKUP_PATH
+              value: "minecraft"
             - name: RESTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -96,17 +104,17 @@ spec:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: minecraft-backup-config
+                  name: b2-credentials
                   key: aws-access-key-id
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: minecraft-backup-config
+                  name: b2-credentials
                   key: aws-secret-access-key
             - name: AWS_DEFAULT_REGION
               valueFrom:
                 secretKeyRef:
-                  name: minecraft-backup-config
+                  name: b2-credentials
                   key: aws-region
             - name: AWS_S3_FORCE_PATH_STYLE
               value: "false"
