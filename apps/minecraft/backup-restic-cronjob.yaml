@@ -99,8 +99,8 @@ spec:
             - name: RESTIC_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: minecraft-backup-config
-                  key: password
+                  name: b2-credentials
+                  key: restic-password
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:

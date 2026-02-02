@@ -10,4 +10,3 @@ resources:
   - postgres.yaml
   - db-credentials-sealed-secret.yaml
   - backup-cronjob.yaml
-  - backup-sealed-secret.yaml
