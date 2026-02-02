@@ -151,6 +151,8 @@ spec:
                 secretKeyRef:
                   name: b2-credentials
                   key: aws-region
+            - name: RESTIC_CACHE_DIR
+              value: "/cache"
             volumeMounts:
             - name: backup-staging
               mountPath: /backup
@@ -159,7 +161,7 @@ spec:
               mountPath: /library
               readOnly: true
             - name: cache
-              mountPath: /root/.cache/restic
+              mountPath: /cache
             resources:
               limits:
                 memory: "1Gi"

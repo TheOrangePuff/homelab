@@ -99,6 +99,8 @@ spec:
                   key: aws-region
             - name: AWS_S3_FORCE_PATH_STYLE
               value: "false"
+            - name: RESTIC_CACHE_DIR
+              value: "/cache"
             volumeMounts:
             - name: vaultwarden-data
               mountPath: /data
