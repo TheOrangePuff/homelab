@@ -16,6 +16,11 @@ data:
         address: ":80"
       websecure:
         address: ":443"
+        transport:
+          respondingTimeouts:
+            readTimeout: "600s"
+            writeTimeout: "600s"
+            idleTimeout: "600s"
     certificatesResolvers:
       letsencrypt:
         acme:

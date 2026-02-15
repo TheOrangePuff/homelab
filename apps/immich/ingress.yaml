@@ -9,6 +9,8 @@ spec:
   routes:
     - match: Host(`immich.theorangeserver.net`)
       kind: Rule
+      middlewares:
+        - name: immich-upload
       services:
         - name: immich-server
           port: 2283
