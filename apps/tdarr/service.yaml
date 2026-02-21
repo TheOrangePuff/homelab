@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: tdarr
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - name: web-ui
     port: 8265
