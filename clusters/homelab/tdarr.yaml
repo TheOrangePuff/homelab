@@ -14,5 +14,4 @@ spec:
   dependsOn:
     - name: app-namespace
     - name: metallb
-    - name: traefik
     - name: longhorn
