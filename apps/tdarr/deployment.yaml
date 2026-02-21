@@ -15,19 +15,12 @@ spec:
         app: tdarr
     spec:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroup: 1000
       containers:
       - name: tdarr
         image: ghcr.io/haveagitgat/tdarr:2.58.02
         securityContext:
-          allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-            - ALL
         resources:
           limits:
             memory: "2Gi"
