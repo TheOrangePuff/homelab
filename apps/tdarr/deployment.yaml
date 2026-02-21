@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: tdarr
+  template:
+    metadata:
+      labels:
+        app: tdarr
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: tdarr
+        image: ghcr.io/haveagitgat/tdarr:2.58.02
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/v2/status
+            port: 8265
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /api/v2/status
+            port: 8265
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+        env:
+        - name: TZ
+          value: "Australia/Adelaide"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: serverIP
+          value: "0.0.0.0"
+        - name: internalNode
+          value: "true"
+        ports:
+        - name: web-ui
+          containerPort: 8265
+          protocol: TCP
+        - name: server
+          containerPort: 8266
+          protocol: TCP
+        volumeMounts:
+        - name: server-data
+          mountPath: /app/server
+        - name: server-data
+          mountPath: /app/configs
+          subPath: configs
+        - name: media
+          mountPath: /media
+      volumes:
+      - name: server-data
+        persistentVolumeClaim:
+          claimName: tdarr
+      - name: media
+        nfs:
+          server: 192.168.0.210
+          path: /mnt/storage/media
