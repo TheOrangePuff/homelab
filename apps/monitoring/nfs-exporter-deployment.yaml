@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-exporter
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-exporter
+  template:
+    metadata:
+      labels:
+        app: nfs-exporter
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+      containers:
+        - name: nfs-exporter
+          image: prom/node-exporter:v1.10.2
+          args:
+            # Only enable filesystem collector to track NFS disk usage
+            - --collector.disable-defaults
+            - --collector.filesystem
+            - --collector.filesystem.mount-points-exclude=^/(dev|proc|run|sys|etc)($|/)
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: metrics
+              containerPort: 9100
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+            requests:
+              memory: "32Mi"
+              cpu: "10m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9100
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9100
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          volumeMounts:
+            - name: nfs-storage
+              mountPath: /nfs-storage
+              readOnly: true
+      volumes:
+        - name: nfs-storage
+          nfs:
+            server: 192.168.0.210
+            path: /mnt/storage
+            readOnly: true

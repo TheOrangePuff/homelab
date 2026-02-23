@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  # Prometheus
+  - prometheus-rbac.yaml
+  - prometheus-configmap.yaml
+  - prometheus-pvc.yaml
+  - prometheus-deployment.yaml
+  - prometheus-service.yaml
+  # Node Exporter (DaemonSet - host metrics per node)
+  - node-exporter-daemonset.yaml
+  - node-exporter-service.yaml
+  # NFS Exporter (tracks disk usage on NFS mount)
+  - nfs-exporter-deployment.yaml
+  - nfs-exporter-service.yaml
+  # Grafana
+  - grafana-configmap.yaml
+  - grafana-pvc.yaml
+  - grafana-deployment.yaml
+  - grafana-service.yaml
+  - grafana-ingress.yaml
