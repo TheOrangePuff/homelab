@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transmission
-  namespace: app
 spec:
   replicas: 1
   selector:
@@ -70,16 +69,10 @@ spec:
           mountPath: /config
         - name: downloads
           mountPath: /downloads
-        - name: watch
-          mountPath: /watch
       volumes:
       - name: config
         emptyDir: {}
       - name: downloads
         nfs:
           server: 192.168.0.210
-          path: /mnt/storage/downloads
-      - name: watch
-        nfs:
-          server: 192.168.0.210
-          path: /mnt/storage/watch
+          path: /mnt/storage/media/Downloads
