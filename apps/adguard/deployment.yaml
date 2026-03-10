@@ -37,13 +37,13 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 3000
+              port: 80
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 3000
+              port: 80
             initialDelaySeconds: 10
             periodSeconds: 5
           env:
@@ -51,7 +51,7 @@ spec:
               value: "Australia/Adelaide"
           ports:
             - name: web
-              containerPort: 3000
+              containerPort: 80
               protocol: TCP
             - name: dns-tcp
               containerPort: 53
