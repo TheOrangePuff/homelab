@@ -14,3 +14,5 @@ resources:
   - fallback-route.yaml
   - https-redirect-middleware.yaml
   - https-redirect-route.yaml
+  - internal-only-middleware.yaml
+  - service-public.yaml

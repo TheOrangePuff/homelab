@@ -68,6 +68,9 @@ spec:
         - name: websecure
           containerPort: 443
           protocol: TCP
+        - name: websecure-public
+          containerPort: 8443
+          protocol: TCP
         volumeMounts:
         - name: config
           mountPath: /etc/traefik
