@@ -6,7 +6,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
-    - websecure-public
+    - websecure-pub
   routes:
     - match: Host(`immich.theorangeserver.net`)
       kind: Rule
