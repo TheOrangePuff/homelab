@@ -13,4 +13,5 @@ spec:
   targetNamespace: media
   dependsOn:
     - name: media-namespace
+    - name: longhorn
   suspend: false
