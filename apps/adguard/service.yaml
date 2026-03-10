@@ -19,6 +19,7 @@ metadata:
     metallb.io/loadBalancerIPs: 192.168.0.244
 spec:
   type: LoadBalancer
+  loadBalancerClass: metallb.universe.tf/metallb
   selector:
     app: adguard
   ports:
