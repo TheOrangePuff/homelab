@@ -16,9 +16,6 @@ data:
         address: ":80"
       websecure:
         address: ":443"
-        http:
-          middlewares:
-            - infra-internal-only@kubernetescrd
         transport:
           respondingTimeouts:
             readTimeout: "600s"
