@@ -14,7 +14,7 @@ spec:
       port: 80
       targetPort: 80
       protocol: TCP
-    - name: websecure-public
+    - name: websecure-pub
       port: 443
       targetPort: 8443
       protocol: TCP

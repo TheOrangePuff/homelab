@@ -24,7 +24,7 @@ data:
             readTimeout: "600s"
             writeTimeout: "600s"
             idleTimeout: "600s"
-      websecure-public:
+      websecure-pub:
         address: ":8443"
         transport:
           respondingTimeouts:

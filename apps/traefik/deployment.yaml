@@ -68,7 +68,7 @@ spec:
         - name: websecure
           containerPort: 443
           protocol: TCP
-        - name: websecure-public
+        - name: websecure-pub
           containerPort: 8443
           protocol: TCP
         volumeMounts:
