@@ -14,20 +14,11 @@ spec:
       labels:
         app: adguard
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       containers:
         - name: adguard
           image: adguard/adguardhome:v0.107.72
           securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
             capabilities:
-              drop:
-                - ALL
               add:
                 - NET_BIND_SERVICE
           args:
