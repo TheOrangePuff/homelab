@@ -15,3 +15,4 @@ spec:
     - name: app-namespace
     - name: metallb
     - name: longhorn
+    - name: traefik
