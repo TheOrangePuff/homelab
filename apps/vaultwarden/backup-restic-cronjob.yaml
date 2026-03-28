@@ -5,10 +5,11 @@ metadata:
   namespace: app
 spec:
   schedule: "0 * * * *"  # Every hour
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 1800
       template:
         spec:
           securityContext:
