@@ -62,7 +62,7 @@ spec:
           runAsNonRoot: false
       containers:
       - name: minecraft
-        image: itzg/minecraft-server:2026.3.2
+        image: itzg/minecraft-server:2026.3.3
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
