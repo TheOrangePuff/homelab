@@ -5,7 +5,7 @@ metadata:
   namespace: app
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: ""
   volumeName: immich-library
   resources:
