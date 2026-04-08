@@ -192,7 +192,7 @@ spec:
           claimName: minecraft-world-end-longhorn
       - name: backups
         persistentVolumeClaim:
-          claimName: minecraft-backups-new
+          claimName: minecraft-backups
       - name: backuper-config
         configMap:
           name: minecraft-backuper-config
