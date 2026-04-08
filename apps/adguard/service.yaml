@@ -17,6 +17,7 @@ kind: Service
 metadata:
   name: adguard
 spec:
+  sessionAffinity: ClientIP
   selector:
     app: adguard
   ports:

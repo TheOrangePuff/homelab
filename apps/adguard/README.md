@@ -42,6 +42,7 @@ The web UI for each instance is accessible via Traefik at the configured Ingress
 `adguardhome-sync` requires credentials for both AdGuard instances. These are stored as a SealedSecret (`adguardhome-sync-sealed-secret.yaml`).
 
 To rotate credentials:
+
 1. Update `adguardhome-sync-secret.yaml` with new values
 2. Seal it: `kubeseal --format yaml < adguardhome-sync-secret.yaml > adguardhome-sync-sealed-secret.yaml`
 3. Delete `adguardhome-sync-secret.yaml`
