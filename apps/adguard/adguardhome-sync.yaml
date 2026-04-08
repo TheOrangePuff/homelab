@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adguardhome-sync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adguardhome-sync
+  template:
+    metadata:
+      labels:
+        app: adguardhome-sync
+    spec:
+      containers:
+        - name: adguardhome-sync
+          image: ghcr.io/bakito/adguardhome-sync:latest
+          imagePullPolicy: IfNotPresent
+          args:
+            - run
+          env:
+            - name: ORIGIN_URL
+              value: "http://adguard-0.adguard-headless.infra.svc.cluster.local"
+            - name: ORIGIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: adguardhome-sync
+                  key: ORIGIN_USERNAME
+            - name: ORIGIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: adguardhome-sync
+                  key: ORIGIN_PASSWORD
+            - name: REPLICA1_URL
+              value: "http://adguard-1.adguard-headless.infra.svc.cluster.local"
+            - name: REPLICA1_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: adguardhome-sync
+                  key: REPLICA1_USERNAME
+            - name: REPLICA1_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: adguardhome-sync
+                  key: REPLICA1_PASSWORD
+            - name: CRON
+              value: "*/5 * * * *"
+            - name: RUNONSTART
+              value: "true"
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+            requests:
+              memory: "16Mi"
+              cpu: "10m"

@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: adguard
 spec:
-  replicas: 1
-  strategy:
-    type: Recreate
+  replicas: 2
+  serviceName: adguard-headless
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app: adguard
@@ -14,6 +15,13 @@ spec:
       labels:
         app: adguard
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: adguard
+              topologyKey: kubernetes.io/hostname
       containers:
         - name: adguard
           image: adguard/adguardhome:v0.107.73
@@ -67,7 +75,12 @@ spec:
             - name: data
               mountPath: /opt/adguardhome/work
               subPath: work
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: adguard
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 1Gi
