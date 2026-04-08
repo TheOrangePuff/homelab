@@ -1,6 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: adguard-primary
+spec:
+  selector:
+    app: adguard
+    statefulset.kubernetes.io/pod-name: adguard-0
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: adguard-headless
 spec:
   clusterIP: None

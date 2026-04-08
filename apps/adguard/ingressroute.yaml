@@ -9,12 +9,7 @@ spec:
     - match: Host(`adguard.theorangeserver.net`)
       kind: Rule
       services:
-        - name: adguard
+        - name: adguard-primary
           port: 80
-          sticky:
-            cookie:
-              name: adguard_sticky
-              secure: true
-              httpOnly: true
   tls:
     secretName: wildcard-certificate
