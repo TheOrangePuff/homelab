@@ -18,7 +18,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: tdarr
-        image: ghcr.io/haveagitgat/tdarr:2.67.01
+        image: ghcr.io/haveagitgat/tdarr:2.68.01
         securityContext:
           readOnlyRootFilesystem: false
         resources:
