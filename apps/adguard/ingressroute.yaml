@@ -11,5 +11,10 @@ spec:
       services:
         - name: adguard
           port: 80
+          sticky:
+            cookie:
+              name: adguard_sticky
+              secure: true
+              httpOnly: true
   tls:
     secretName: wildcard-certificate
