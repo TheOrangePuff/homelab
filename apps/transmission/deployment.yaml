@@ -30,9 +30,10 @@ spec:
           httpGet:
             path: /transmission/web/
             port: 9091
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 30
+          failureThreshold: 5
         readinessProbe:
           httpGet:
             path: /transmission/web/
