@@ -182,16 +182,16 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: minecraft-data-longhorn
+          claimName: minecraft-data
       - name: world
         persistentVolumeClaim:
-          claimName: minecraft-world-longhorn
+          claimName: minecraft-world
       - name: world-nether
         persistentVolumeClaim:
-          claimName: minecraft-world-nether-longhorn
+          claimName: minecraft-world-nether
       - name: world-end
         persistentVolumeClaim:
-          claimName: minecraft-world-end-longhorn
+          claimName: minecraft-world-end
       - name: backuper-config
         configMap:
           name: minecraft-backuper-config
