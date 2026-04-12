@@ -40,7 +40,7 @@ spec:
             port: 9091
           initialDelaySeconds: 10
           periodSeconds: 10
-          timeoutSeconds: 3
+          timeoutSeconds: 10
         env:
         - name: PUID
           value: "1000"
