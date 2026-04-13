@@ -10,8 +10,6 @@ resources:
   - service.yaml
   - ingressclass.yaml
   - dashboard-ingressroute.yaml
-  - docker-backend.yaml
-  - fallback-route.yaml
   - https-redirect-middleware.yaml
   - https-redirect-route.yaml
   - internal-only-middleware.yaml
