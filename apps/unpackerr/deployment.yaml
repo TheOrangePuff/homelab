@@ -21,6 +21,8 @@ spec:
           image: golift/unpackerr:0.15.2
           securityContext:
             readOnlyRootFilesystem: false
+            runAsUser: 1000
+            runAsGroup: 1000
           resources:
             requests:
               memory: "64Mi"
