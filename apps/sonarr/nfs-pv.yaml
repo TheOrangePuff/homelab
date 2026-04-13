@@ -12,7 +12,7 @@ spec:
     - hard
   nfs:
     server: 192.168.0.210
-    path: /mnt/storage/media
+    path: /media
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
 ---
@@ -30,6 +30,6 @@ spec:
     - hard
   nfs:
     server: 192.168.0.210
-    path: /mnt/storage/media/Downloads
+    path: /media/Downloads
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
