@@ -1,72 +1,72 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transmission
+  name: sonarr
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: transmission
+      app: sonarr
   template:
     metadata:
       labels:
-        app: transmission
+        app: sonarr
     spec:
       securityContext:
         fsGroup: 1000
       containers:
-      - name: transmission
-        image: linuxserver/transmission:4.0.1
+      - name: sonarr
+        image: linuxserver/sonarr:4.0.16
         securityContext:
           readOnlyRootFilesystem: false
         resources:
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
           requests:
             memory: "256Mi"
-            cpu: "200m"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
         livenessProbe:
           httpGet:
-            path: /transmission/web/
-            port: 9091
-          initialDelaySeconds: 60
-          periodSeconds: 60
-          timeoutSeconds: 30
-          failureThreshold: 5
+            path: /ping
+            port: 8989
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
         readinessProbe:
           httpGet:
-            path: /transmission/web/
-            port: 9091
+            path: /ping
+            port: 8989
           initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
         env:
+        - name: TZ
+          value: "Australia/Adelaide"
         - name: PUID
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: TZ
-          value: "Australia/Adelaide"
         ports:
         - name: web
-          containerPort: 9091
+          containerPort: 8989
           protocol: TCP
-        - name: torrent
-          containerPort: 51413
-          protocol: TCP
-        - name: torrent-udp
-          containerPort: 51413
-          protocol: UDP
         volumeMounts:
         - name: config
           mountPath: /config
+        - name: data
+          mountPath: /data
         - name: downloads
           mountPath: /downloads
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: transmission
+          claimName: sonarr
+      - name: data
+        persistentVolumeClaim:
+          claimName: sonarr-data
       - name: downloads
         persistentVolumeClaim:
-          claimName: transmission-downloads
+          claimName: sonarr-downloads

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: sonarr-data
+  resources:
+    requests:
+      storage: 16Ti
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-downloads
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: sonarr-downloads
+  resources:
+    requests:
+      storage: 16Ti

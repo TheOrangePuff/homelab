@@ -12,6 +12,8 @@ resources:
   - node-exporter-daemonset.yaml
   - node-exporter-service.yaml
   # NFS Exporter (tracks disk usage on NFS mount)
+  - nfs-exporter-pv.yaml
+  - nfs-exporter-pvc.yaml
   - nfs-exporter-deployment.yaml
   - nfs-exporter-service.yaml
   # Grafana

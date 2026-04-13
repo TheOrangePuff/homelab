@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-library
-  namespace: app
+  name: tdarr-media
 spec:
   accessModes:
     - ReadWriteMany
   storageClassName: ""
-  volumeName: immich-library
+  volumeName: tdarr-media
   resources:
     requests:
       storage: 16Ti

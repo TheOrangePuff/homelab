@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-library
-  namespace: app
+  name: transmission-downloads
 spec:
   accessModes:
     - ReadWriteMany
   storageClassName: ""
-  volumeName: immich-library
+  volumeName: transmission-downloads
   resources:
     requests:
       storage: 16Ti

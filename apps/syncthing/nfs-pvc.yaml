@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: immich-library
-  namespace: app
+  name: syncthing-mnt
 spec:
   accessModes:
     - ReadWriteMany
   storageClassName: ""
-  volumeName: immich-library
+  volumeName: syncthing-mnt
   resources:
     requests:
       storage: 16Ti

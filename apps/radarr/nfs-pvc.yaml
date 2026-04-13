@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: radarr-data
+  resources:
+    requests:
+      storage: 16Ti
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-downloads
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: radarr-downloads
+  resources:
+    requests:
+      storage: 16Ti

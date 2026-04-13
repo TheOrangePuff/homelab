@@ -65,10 +65,8 @@ spec:
           persistentVolumeClaim:
             claimName: radarr
         - name: data
-          nfs:
-            server: 192.168.0.210
-            path: /mnt/storage/media
+          persistentVolumeClaim:
+            claimName: radarr-data
         - name: downloads
-          nfs:
-            server: 192.168.0.210
-            path: /mnt/storage/media/Downloads
+          persistentVolumeClaim:
+            claimName: radarr-downloads

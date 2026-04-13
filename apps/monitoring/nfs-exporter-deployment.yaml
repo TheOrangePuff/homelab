@@ -60,7 +60,5 @@ spec:
               readOnly: true
       volumes:
         - name: nfs-storage
-          nfs:
-            server: 192.168.0.210
-            path: /mnt/storage
-            readOnly: true
+          persistentVolumeClaim:
+            claimName: nfs-exporter-storage
