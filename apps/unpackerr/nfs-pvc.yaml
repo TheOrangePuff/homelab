@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: unpackerr-downloads
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: unpackerr-downloads
+  resources:
+    requests:
+      storage: 16Ti

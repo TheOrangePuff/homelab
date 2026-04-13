@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unpackerr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: unpackerr
+  template:
+    metadata:
+      labels:
+        app: unpackerr
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: unpackerr
+          image: golift/unpackerr:0.15.2
+          securityContext:
+            readOnlyRootFilesystem: false
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          env:
+            - name: TZ
+              value: "Australia/Adelaide"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: UN_RADARR_0_URL
+              value: "http://radarr.media.svc.cluster.local:7878"
+            - name: UN_RADARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: unpackerr-secret
+                  key: RADARR_API_KEY
+            - name: UN_TRANSMISSION_0_URL
+              value: "http://transmission.media.svc.cluster.local:9091"
+          volumeMounts:
+            - name: downloads
+              mountPath: /downloads
+      volumes:
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: unpackerr-downloads

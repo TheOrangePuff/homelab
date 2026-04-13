@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: unpackerr-downloads
+spec:
+  capacity:
+    storage: 16Ti
+  accessModes:
+    - ReadWriteMany
+  mountOptions:
+    - nfsvers=4
+    - hard
+  nfs:
+    server: 192.168.0.210
+    path: /media/Downloads
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
