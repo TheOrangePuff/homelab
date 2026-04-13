@@ -10,4 +10,4 @@ spec:
   volumeName: immich-library
   resources:
     requests:
-      storage: 16Ti
+      storage: 10Ti
