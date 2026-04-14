@@ -130,7 +130,7 @@ spec:
             volumeMounts:
             - name: backups
               mountPath: /backups
-              subPath: plugins/Backuper/backups
+              subPath: plugins/Backuper/Backups
               readOnly: true
             - name: cache
               mountPath: /cache
