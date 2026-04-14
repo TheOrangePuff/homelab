@@ -123,6 +123,7 @@ spec:
             volumeMounts:
             - name: backups
               mountPath: /backups
+              subPath: plugins/Backuper/backups
               readOnly: true
             - name: cache
               mountPath: /cache
@@ -137,6 +138,6 @@ spec:
           volumes:
           - name: backups
             persistentVolumeClaim:
-              claimName: minecraft-backups-new
+              claimName: minecraft-data
           - name: cache
             emptyDir: {}
