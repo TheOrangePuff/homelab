@@ -4,5 +4,5 @@ updates:
     directories:
       - "/apps/**"
     schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
+      interval: "daily"
+    open-pull-requests-limit: 20
