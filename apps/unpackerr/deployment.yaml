@@ -30,6 +30,14 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+              - /scripts/check.sh
+              - /downloads
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
           env:
             - name: TZ
               value: "Australia/Adelaide"
@@ -49,7 +57,14 @@ spec:
           volumeMounts:
             - name: downloads
               mountPath: /downloads
+            - name: nfs-healthcheck
+              mountPath: /scripts
+              readOnly: true
       volumes:
         - name: downloads
           persistentVolumeClaim:
             claimName: unpackerr-downloads
+        - name: nfs-healthcheck
+          configMap:
+            name: nfs-healthcheck
+            defaultMode: 0755

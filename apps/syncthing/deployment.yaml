@@ -36,9 +36,11 @@ spec:
             memory: "256Mi"
             cpu: "100m"
         livenessProbe:
-          httpGet:
-            path: /rest/noauth/health
-            port: 8384
+          exec:
+            command:
+            - /scripts/check.sh
+            - /var/syncthing
+            - http://localhost:8384/rest/noauth/health
           initialDelaySeconds: 30
           periodSeconds: 30
           timeoutSeconds: 5
@@ -73,6 +75,9 @@ spec:
           mountPath: /config
         - name: mnt
           mountPath: /var/syncthing
+        - name: nfs-healthcheck
+          mountPath: /scripts
+          readOnly: true
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -80,3 +85,7 @@ spec:
       - name: mnt
         persistentVolumeClaim:
           claimName: syncthing-mnt
+      - name: nfs-healthcheck
+        configMap:
+          name: nfs-healthcheck
+          defaultMode: 0755

@@ -27,9 +27,11 @@ spec:
             memory: "256Mi"
             cpu: "200m"
         livenessProbe:
-          httpGet:
-            path: /transmission/web/
-            port: 9091
+          exec:
+            command:
+            - /scripts/check.sh
+            - /downloads
+            - http://localhost:9091/transmission/web/
           initialDelaySeconds: 60
           periodSeconds: 60
           timeoutSeconds: 30
@@ -63,6 +65,9 @@ spec:
           mountPath: /config
         - name: downloads
           mountPath: /downloads
+        - name: nfs-healthcheck
+          mountPath: /scripts
+          readOnly: true
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -70,3 +75,7 @@ spec:
       - name: downloads
         persistentVolumeClaim:
           claimName: transmission-downloads
+      - name: nfs-healthcheck
+        configMap:
+          name: nfs-healthcheck
+          defaultMode: 0755

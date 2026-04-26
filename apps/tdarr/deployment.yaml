@@ -29,9 +29,11 @@ spec:
             memory: "512Mi"
             cpu: "500m"
         livenessProbe:
-          httpGet:
-            path: /api/v2/status
-            port: 8265
+          exec:
+            command:
+            - /scripts/check.sh
+            - /media
+            - http://localhost:8265/api/v2/status
           initialDelaySeconds: 30
           periodSeconds: 30
           timeoutSeconds: 5
@@ -68,6 +70,9 @@ spec:
           subPath: configs
         - name: media
           mountPath: /media
+        - name: nfs-healthcheck
+          mountPath: /scripts
+          readOnly: true
       volumes:
       - name: server-data
         persistentVolumeClaim:
@@ -75,3 +80,7 @@ spec:
       - name: media
         persistentVolumeClaim:
           claimName: tdarr-media
+      - name: nfs-healthcheck
+        configMap:
+          name: nfs-healthcheck
+          defaultMode: 0755

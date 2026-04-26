@@ -29,9 +29,11 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           livenessProbe:
-            httpGet:
-              path: /ping
-              port: 7878
+            exec:
+              command:
+              - /scripts/check.sh
+              - /downloads
+              - http://localhost:7878/ping
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -60,6 +62,9 @@ spec:
               mountPath: /data
             - name: downloads
               mountPath: /downloads
+            - name: nfs-healthcheck
+              mountPath: /scripts
+              readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
@@ -70,3 +75,7 @@ spec:
         - name: downloads
           persistentVolumeClaim:
             claimName: radarr-downloads
+        - name: nfs-healthcheck
+          configMap:
+            name: nfs-healthcheck
+            defaultMode: 0755

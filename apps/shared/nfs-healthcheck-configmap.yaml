@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nfs-healthcheck
+data:
+  check.sh: |
+    #!/bin/sh
+    set -e
+    ls "$1" # nfs path
+    [ -z "$2" ] || wget -q -O/dev/null "$2" # optional web path check
