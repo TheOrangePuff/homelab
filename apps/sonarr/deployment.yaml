@@ -17,65 +17,65 @@ spec:
       securityContext:
         fsGroup: 1000
       containers:
-      - name: sonarr
-        image: linuxserver/sonarr:4.0.17
-        securityContext:
-          readOnlyRootFilesystem: false
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          exec:
-            command:
-            - /scripts/check.sh
-            - /downloads
-            - http://localhost:8989/ping
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ping
-            port: 8989
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-        env:
-        - name: TZ
-          value: "Australia/Adelaide"
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        ports:
-        - name: web
-          containerPort: 8989
-          protocol: TCP
-        volumeMounts:
-        - name: config
-          mountPath: /config
-        - name: data
-          mountPath: /data
-        - name: downloads
-          mountPath: /downloads
-        - name: nfs-healthcheck
-          mountPath: /scripts
-          readOnly: true
+        - name: sonarr
+          image: linuxserver/sonarr:4.0.17
+          securityContext:
+            readOnlyRootFilesystem: false
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - /scripts/check.sh
+                - /downloads
+                - http://localhost:8989/ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8989
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          env:
+            - name: TZ
+              value: "Australia/Adelaide"
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          ports:
+            - name: web
+              containerPort: 8989
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+            - name: downloads
+              mountPath: /downloads
+            - name: nfs-healthcheck
+              mountPath: /scripts
+              readOnly: true
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: sonarr
-      - name: data
-        persistentVolumeClaim:
-          claimName: sonarr-data
-      - name: downloads
-        persistentVolumeClaim:
-          claimName: sonarr-downloads
-      - name: nfs-healthcheck
-        configMap:
-          name: nfs-healthcheck
-          defaultMode: 0755
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr
+        - name: data
+          persistentVolumeClaim:
+            claimName: sonarr-data
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: sonarr-downloads
+        - name: nfs-healthcheck
+          configMap:
+            name: nfs-healthcheck
+            defaultMode: 0755
