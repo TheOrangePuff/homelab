@@ -52,6 +52,13 @@ spec:
                 secretKeyRef:
                   name: unpackerr-secret
                   key: RADARR_API_KEY
+            - name: UN_SONARR_0_URL
+              value: "http://sonarr.media.svc.cluster.local:8989"
+            - name: UN_SONARR_0_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: unpackerr-secret
+                  key: SONARR_API_KEY
             - name: UN_TRANSMISSION_0_URL
               value: "http://transmission.media.svc.cluster.local:9091"
           volumeMounts:
