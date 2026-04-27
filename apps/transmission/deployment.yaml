@@ -33,7 +33,6 @@ spec:
             command:
             - /scripts/check.sh
             - /downloads
-            - http://localhost:9091/transmission/web/
           initialDelaySeconds: 60
           periodSeconds: 60
           timeoutSeconds: 30
@@ -44,7 +43,8 @@ spec:
             port: 9091
           initialDelaySeconds: 10
           periodSeconds: 10
-          timeoutSeconds: 10
+          timeoutSeconds: 30
+          failureThreshold: 5
         env:
         - name: PUID
           value: "1000"
