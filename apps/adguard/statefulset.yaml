@@ -24,7 +24,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: adguard
-          image: adguard/adguardhome:v0.107.78
+          image: adguard/adguardhome:v0.107.79
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:
