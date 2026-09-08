@@ -12,7 +12,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: restore
-        image: restic/restic:0.19.0
+        image: restic/restic:0.19.1
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
