@@ -27,7 +27,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: unpackerr
-          image: golift/unpackerr:0.15.2
+          image: golift/unpackerr:v0.16.1
           securityContext:
             readOnlyRootFilesystem: false
             runAsUser: 1000
