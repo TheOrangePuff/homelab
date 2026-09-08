@@ -1,6 +1,7 @@
 # My Home Lab 🧪
 
-A multi-node Kubernetes cluster to manage all my home server goodness.
+A multi-node Kubernetes cluster to manage all my home server goodness,
+deployed via GitOps with FluxCD.
 
 ## Services
 
@@ -13,7 +14,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 ### Networking
 
-- [ ] AdGuard Home
+- [x] AdGuard Home
 - [x] MetalLB
 - [x] Unifi Dashboard
 - [x] Wireguard
@@ -27,8 +28,10 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 ### Observability
 
-- [ ] Grafana
-- [ ] Prometheus
+- [x] Grafana
+- [x] Prometheus
+- [x] Node Exporter
+- [x] NFS Exporter
 - [ ] Loki
 - [ ] InfluxDB
 - [ ] Uptime Kuma
@@ -40,20 +43,20 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 - [x] Longhorn
 - [ ] NextCloud
 
-### Backups
-
-- [ ] Restic
-- [ ] Velero
-
 ### Media
 
 #### Automation
 
-- [ ] Radarr
-- [ ] Sonarr
+- [x] Radarr
+- [x] Sonarr
 - [ ] Bazarr
-- [ ] Prowlarr
+- [x] Prowlarr
+- [x] Unpackerr
 - [x] Transmission
+
+#### Transcoding
+
+- [x] Tdarr
 
 #### Books
 
@@ -61,7 +64,7 @@ A multi-node Kubernetes cluster to manage all my home server goodness.
 
 #### Photos
 
-- [ ] Immich
+- [x] Immich
 
 #### Servers
 
@@ -83,4 +86,5 @@ TBA
 
 ## Deployments
 
-Deployments are automatically handled through FluxCD. All code committed to main is picked up by FluxCD and automatically published to my cluster 🚀
+Deployments are automatically handled through FluxCD. All code committed to
+`main` is picked up by FluxCD and automatically reconciled to the cluster 🚀
